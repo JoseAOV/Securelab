@@ -1,2 +1,110 @@
-// For information on how to create your own theme, please refer to:
-// https://ionicframework.com/docs/theming/
+// SecureLab Theme Variables
+// ---------------------------------------------------------
+// Cybersecurity-inspired dark theme with electric blue accents
+// and danger red for security alerts.
+
+:root {
+  // ── Primary: Electric Cyan / Azul Eléctrico ──
+  --ion-color-primary: #00d4ff;
+  --ion-color-primary-rgb: 0, 212, 255;
+  --ion-color-primary-contrast: #000000;
+  --ion-color-primary-contrast-rgb: 0, 0, 0;
+  --ion-color-primary-shade: #00bbe0;
+  --ion-color-primary-tint: #1ad8ff;
+
+  // ── Secondary: Deep Blue Tech ──
+  --ion-color-secondary: #1a73e8;
+  --ion-color-secondary-rgb: 26, 115, 232;
+  --ion-color-secondary-contrast: #ffffff;
+  --ion-color-secondary-contrast-rgb: 255, 255, 255;
+  --ion-color-secondary-shade: #1765cc;
+  --ion-color-secondary-tint: #3181ea;
+
+  // ── Tertiary: Neon Purple ──
+  --ion-color-tertiary: #7c4dff;
+  --ion-color-tertiary-rgb: 124, 77, 255;
+  --ion-color-tertiary-contrast: #ffffff;
+  --ion-color-tertiary-contrast-rgb: 255, 255, 255;
+  --ion-color-tertiary-shade: #6d44e0;
+  --ion-color-tertiary-tint: #895fff;
+
+  // ── Success: Secure Green ──
+  --ion-color-success: #00e676;
+  --ion-color-success-rgb: 0, 230, 118;
+  --ion-color-success-contrast: #000000;
+  --ion-color-success-contrast-rgb: 0, 0, 0;
+  --ion-color-success-shade: #00ca68;
+  --ion-color-success-tint: #1ae984;
+
+  // ── Warning: Amber Alert ──
+  --ion-color-warning: #ffab00;
+  --ion-color-warning-rgb: 255, 171, 0;
+  --ion-color-warning-contrast: #000000;
+  --ion-color-warning-contrast-rgb: 0, 0, 0;
+  --ion-color-warning-shade: #e09600;
+  --ion-color-warning-tint: #ffb31a;
+
+  // ── Danger: Security Breach Red ──
+  --ion-color-danger: #ff1744;
+  --ion-color-danger-rgb: 255, 23, 68;
+  --ion-color-danger-contrast: #ffffff;
+  --ion-color-danger-contrast-rgb: 255, 255, 255;
+  --ion-color-danger-shade: #e0143c;
+  --ion-color-danger-tint: #ff2e57;
+
+  // ── Dark: Deep Background ──
+  --ion-color-dark: #0d1117;
+  --ion-color-dark-rgb: 13, 17, 23;
+  --ion-color-dark-contrast: #ffffff;
+  --ion-color-dark-contrast-rgb: 255, 255, 255;
+  --ion-color-dark-shade: #0b0f14;
+  --ion-color-dark-tint: #25292e;
+
+  // ── Medium ──
+  --ion-color-medium: #8c9bab;
+  --ion-color-medium-rgb: 140, 155, 171;
+  --ion-color-medium-contrast: #000000;
+  --ion-color-medium-contrast-rgb: 0, 0, 0;
+  --ion-color-medium-shade: #7b8896;
+  --ion-color-medium-tint: #98a5b3;
+
+  // ── Light ──
+  --ion-color-light: #1e2a3a;
+  --ion-color-light-rgb: 30, 42, 58;
+  --ion-color-light-contrast: #ffffff;
+  --ion-color-light-contrast-rgb: 255, 255, 255;
+  --ion-color-light-shade: #1a2533;
+  --ion-color-light-tint: #353f4e;
+
+  // ── Dark Mode Background Overrides ──
+  --ion-background-color: #0d1117;
+  --ion-background-color-rgb: 13, 17, 23;
+
+  --ion-text-color: #e6edf3;
+  --ion-text-color-rgb: 230, 237, 243;
+
+  --ion-item-background: #161b22;
+  --ion-card-background: #161b22;
+  --ion-toolbar-background: #0d1117;
+
+  // ── Stepped Background Colors (for Ionic Dark Mode) ──
+  --ion-background-color-step-50: #141920;
+  --ion-background-color-step-100: #1b2129;
+  --ion-background-color-step-150: #222932;
+  --ion-background-color-step-200: #29313b;
+  --ion-background-color-step-250: #303944;
+  --ion-background-color-step-300: #37414d;
+  --ion-background-color-step-350: #3e4956;
+  --ion-background-color-step-400: #45515f;
+  --ion-background-color-step-450: #4c5968;
+  --ion-background-color-step-500: #536171;
+  --ion-background-color-step-550: #5a697a;
+  --ion-background-color-step-600: #617183;
+  --ion-background-color-step-650: #68798c;
+  --ion-background-color-step-700: #6f8195;
+  --ion-background-color-step-750: #76899e;
+  --ion-background-color-step-800: #7d91a7;
+  --ion-background-color-step-850: #8499b0;
+  --ion-background-color-step-900: #8ba1b9;
+  --ion-background-color-step-950: #92a9c2;
+}

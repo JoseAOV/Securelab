@@ -1,0 +1,177 @@
+<!-- HEADER -->
+<ion-header [translucent]="true" class="inventario-header">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      <div class="header-brand">
+        <ion-icon name="hardware-chip" class="brand-icon"></ion-icon>
+        <span class="brand-text">INVENTARIO</span>
+      </div>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="inventario-content">
+
+  <!-- Pull to Refresh -->
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <!-- Titulo Principal -->
+  <div class="page-title-section">
+    <h1 class="page-title">Gestion de Activos</h1>
+    <p class="page-subtitle">INVENTARIO DEL LABORATORIO</p>
+  </div>
+
+  <!-- Barra de busqueda -->
+  <div class="search-wrapper">
+    <ion-searchbar id="inventario-search" mode="ios" placeholder="Buscar por nombre, ubicacion o RFID..."
+      [debounce]="300" (ionInput)="onSearchChange($event)" class="custom-searchbar">
+    </ion-searchbar>
+  </div>
+
+  <!-- Contador -->
+  <div class="section-header">
+    <span class="section-title">EQUIPOS REGISTRADOS</span>
+    <span class="section-badge">{{ activosFiltrados.length }}</span>
+  </div>
+
+  <!-- Estado: Cargando -->
+  @if (cargando) {
+  <div class="loading-state">
+    <ion-spinner name="crescent" class="loading-spinner"></ion-spinner>
+    <p class="loading-text">Cargando inventario...</p>
+  </div>
+  }
+
+  <!-- Estado: Sin resultados -->
+  @if (!cargando && activosFiltrados.length === 0) {
+  <div class="empty-state">
+    <ion-icon name="hardware-chip-outline" class="empty-icon"></ion-icon>
+    <p class="empty-text">
+      @if (searchTerm) {
+      No se encontraron activos para "{{ searchTerm }}"
+      } @else {
+      No hay activos registrados aun.
+      }
+    </p>
+  </div>
+  }
+
+  <!-- Lista de Activos -->
+  @if (!cargando && activosFiltrados.length > 0) {
+  <ion-list class="activos-list" lines="none">
+    @for (activo of activosFiltrados; track activo.id) {
+    <ion-item class="activo-item" id="activo-{{ activo.id }}">
+      <!-- Icono de estado -->
+      <div class="activo-status-icon {{ getEstadoClass(activo.estado) }}" slot="start">
+        <ion-icon [name]="getEstadoIcon(activo.estado)"></ion-icon>
+      </div>
+
+      <!-- Informacion del activo -->
+      <ion-label>
+        <h2 class="activo-nombre">{{ activo.nombre }}</h2>
+        <div class="activo-meta">
+          <span class="activo-ubicacion">
+            <ion-icon name="location-outline"></ion-icon>
+            {{ activo.ubicacion || 'Sin ubicacion' }}
+          </span>
+          <span class="activo-estado-tag {{ getEstadoClass(activo.estado) }}">
+            {{ getEstadoLabel(activo.estado) }}
+          </span>
+        </div>
+        @if (activo.rfid_tag) {
+        <p class="activo-rfid">RFID: {{ activo.rfid_tag }}</p>
+        }
+      </ion-label>
+
+      <!-- Toggle de prestamo -->
+      <div class="toggle-section" slot="end">
+        <span class="toggle-label">Prestamo</span>
+        <ion-toggle [checked]="activo.prestamo_habilitado" (ionChange)="cambiarPermiso(activo, $event)"
+          [enableOnOffLabels]="true" class="custom-toggle" id="toggle-{{ activo.id }}">
+        </ion-toggle>
+      </div>
+    </ion-item>
+    }
+  </ion-list>
+  }
+
+  <!-- Footer -->
+  <footer class="inventario-footer">
+    <span>SecureLab 2025 - Inventario inteligente de activos</span>
+  </footer>
+
+  <!-- FAB: Agregar Activo -->
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end" id="fab-agregar-activo">
+    <ion-fab-button (click)="isModalOpen = true" class="fab-add">
+      <ion-icon name="add-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+</ion-content>
+
+<!-- MODAL: Registrar Nuevo Activo -->
+<ion-modal [isOpen]="isModalOpen" (didDismiss)="isModalOpen = false" class="modal-registrar">
+
+  <ng-template>
+    <ion-header class="modal-header">
+      <ion-toolbar>
+        <ion-title>Registrar Nuevo Activo</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="isModalOpen = false" fill="clear" class="modal-close-btn">
+            <ion-icon name="close" slot="icon-only"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content class="modal-content">
+      <ion-list lines="full" class="form-list">
+
+        <!-- Nombre del Equipo -->
+        <ion-item class="form-item">
+          <ion-input label="Nombre del Equipo" labelPlacement="floating" placeholder="Ej: Laptop HP ProBook 450"
+            [(ngModel)]="nuevoActivo.nombre" required id="input-nombre">
+          </ion-input>
+        </ion-item>
+
+        <!-- Descripcion -->
+        <ion-item class="form-item">
+          <ion-textarea label="Descripcion" labelPlacement="floating" placeholder="Detalles adicionales del equipo..."
+            [(ngModel)]="nuevoActivo.descripcion" [autoGrow]="true" [rows]="3" id="input-descripcion">
+          </ion-textarea>
+        </ion-item>
+
+        <!-- Codigo RFID -->
+        <ion-item class="form-item">
+          <ion-input label="RFID Tag" labelPlacement="floating" placeholder="Ej: TAG-2FD-A1B2C3"
+            [(ngModel)]="nuevoActivo.rfid_tag" required id="input-rfid">
+          </ion-input>
+        </ion-item>
+
+        <!-- Ubicacion -->
+        <ion-item class="form-item">
+          <ion-input label="Ubicacion" labelPlacement="floating" placeholder="Ej: Laboratorio TI - Principal"
+            [(ngModel)]="nuevoActivo.ubicacion" id="input-ubicacion">
+          </ion-input>
+        </ion-item>
+
+      </ion-list>
+
+      <!-- Boton Guardar -->
+      <div class="form-actions">
+        <ion-button expand="block" (click)="guardarActivo()"
+          [disabled]="!nuevoActivo.nombre.trim() || !nuevoActivo.rfid_tag.trim()" class="btn-guardar"
+          id="btn-guardar-activo">
+          <ion-icon name="save" slot="start"></ion-icon>
+          Registrar Activo
+        </ion-button>
+      </div>
+    </ion-content>
+  </ng-template>
+
+</ion-modal>

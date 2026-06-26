@@ -1,0 +1,131 @@
+<!-- ═══════ HEADER ═══════ -->
+<ion-header [translucent]="true" class="portal-header">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+
+    <ion-title>
+      <div class="header-brand">
+        <ion-icon name="shield-checkmark" class="brand-icon"></ion-icon>
+        <span class="brand-text">MI PORTAL</span>
+      </div>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="portal-content">
+
+  <!-- Pull to Refresh -->
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <!-- ═══════ Hero Section ═══════ -->
+  <div class="portal-hero">
+    <div class="hero-icon-wrap">
+      <ion-icon name="qr-code-outline" class="hero-icon"></ion-icon>
+    </div>
+    <h1 class="portal-title">Solicita tu Pase de Salida</h1>
+    <p class="portal-subtitle">
+      Tienes <strong>10 minutos</strong> para cruzar los sensores tras generarlo.
+    </p>
+  </div>
+
+  <!-- ═══════ Selector de Equipo ═══════ -->
+  <div class="portal-card">
+    <div class="card-header">
+      <ion-icon name="laptop-outline" class="card-header-icon"></ion-icon>
+      <span class="card-header-label">EQUIPO DISPONIBLE</span>
+      <span class="card-header-badge">{{ equiposDisponibles.length }}</span>
+    </div>
+
+    @if (equiposDisponibles.length === 0) {
+    <div class="empty-state">
+      <ion-icon name="warning-outline" class="empty-icon"></ion-icon>
+      <p>No hay equipos disponibles para préstamo en este momento.</p>
+    </div>
+    } @else {
+    <ion-select label="Selecciona un equipo" label-placement="stacked" interface="action-sheet"
+      placeholder="Toca para elegir..." [(ngModel)]="equipoSeleccionado" class="portal-select">
+      @for (equipo of equiposDisponibles; track equipo.id) {
+      <ion-select-option [value]="equipo.id">
+        {{ equipo.nombre }}
+      </ion-select-option>
+      }
+    </ion-select>
+    }
+  </div>
+
+  <!-- ═══════ Indicador de selección ═══════ -->
+  @if (equipoSeleccionado) {
+  <div class="selection-indicator">
+    <ion-icon name="checkmark-circle" class="selection-icon"></ion-icon>
+    <span>Equipo seleccionado — listo para generar pase</span>
+  </div>
+  }
+
+  <!-- ═══════ Botón Generar Pase ═══════ -->
+  <div class="action-section">
+    <ion-button expand="block" size="large" class="generate-btn" [disabled]="!equipoSeleccionado"
+      (click)="solicitarPase()">
+      <ion-icon name="qr-code-outline" slot="start"></ion-icon>
+      Generar Pase Autorizado
+    </ion-button>
+  </div>
+
+  <!-- ═══════ Info Card ═══════ -->
+  <div class="info-card">
+    <div class="info-row">
+      <ion-icon name="time-outline" class="info-icon"></ion-icon>
+      <span>El pase expira automáticamente en 10 minutos.</span>
+    </div>
+    <div class="info-row">
+      <ion-icon name="shield-checkmark-outline" class="info-icon"></ion-icon>
+      <span>Cada pase es un código único e irrepetible.</span>
+    </div>
+  </div>
+
+  <!-- ═══════ Mis Equipos en Préstamo ═══════ -->
+  <div class="portal-card prestamos-card">
+    <div class="card-header">
+      <ion-icon name="file-tray-full-outline" class="card-header-icon"></ion-icon>
+      <span class="card-header-label">MIS EQUIPOS EN PRÉSTAMO</span>
+      <span class="card-header-badge">{{ prestamosActivos.length }}</span>
+    </div>
+
+    @if (prestamosActivos.length === 0) {
+    <div class="empty-state">
+      <ion-icon name="checkmark-done-outline" class="empty-icon empty-icon--ok"></ion-icon>
+      <p>No tienes equipos en préstamo actualmente. ¡Todo en orden!</p>
+    </div>
+    } @else {
+    @for (prestamo of prestamosActivos; track prestamo.id) {
+    <div class="prestamo-item">
+      <div class="prestamo-info">
+        <ion-icon name="laptop-outline" class="prestamo-equipo-icon"></ion-icon>
+        <span class="prestamo-nombre">{{ prestamo.activos?.nombre ?? 'Equipo' }}</span>
+      </div>
+
+      @if (!prestamo.url_evidencia_devolucion) {
+      <ion-button size="small" color="warning" class="devolucion-btn" (click)="iniciarDevolucion(prestamo.id)">
+        <ion-icon name="camera-outline" slot="start"></ion-icon>
+        Devolver
+      </ion-button>
+      } @else {
+      <ion-button size="small" class="devolucion-btn devolucion-btn--done" [disabled]="true">
+        <ion-icon name="exit-outline" slot="start"></ion-icon>
+        Listo — Pasa por la puerta
+      </ion-button>
+      }
+    </div>
+    }
+    }
+  </div>
+
+  <!-- ═══════ Footer ═══════ -->
+  <footer class="portal-footer">
+    <span>SecureLab © 2025 · Portal del Estudiante</span>
+  </footer>
+
+</ion-content>

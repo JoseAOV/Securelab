@@ -1,0 +1,231 @@
+<!-- ═══════ HEADER: SecureLab Branding ═══════ -->
+<ion-header [translucent]="true" class="dashboard-header">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+
+    <ion-title>
+      <div class="header-brand">
+        <ion-icon name="shield-checkmark" class="brand-icon"></ion-icon>
+        <span class="brand-text">SECURELAB</span>
+      </div>
+    </ion-title>
+
+    <ion-buttons slot="end">
+      <button class="notification-btn" aria-label="Notificaciones">
+        <ion-icon name="notifications-outline"></ion-icon>
+        @if (notificaciones > 0) {
+        <span class="notif-badge">{{ notificaciones }}</span>
+        }
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="dashboard-content">
+
+  <!-- Pull to Refresh -->
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <!-- ═══════ Título Principal ═══════ -->
+  <div class="page-title-section">
+    <h1 class="page-title">Monitoreo en Vivo</h1>
+    <p class="page-subtitle">RESUMEN DEL DÍA</p>
+  </div>
+
+  <!-- ═══════ SECCIÓN 1: Stat Cards ═══════ -->
+  <div class="stats-grid">
+    <!-- Card: Disponibles -->
+    <div class="stat-card stat-card--success">
+      <div class="stat-card-inner">
+        <div class="stat-left">
+          <span class="stat-number">{{ totalDisponibles }}</span>
+          <span class="stat-label">DISPONIBLES</span>
+        </div>
+        <div class="stat-right">
+          <ion-icon name="desktop-outline" class="stat-icon"></ion-icon>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card: En Préstamo -->
+    <div class="stat-card stat-card--primary">
+      <div class="stat-card-inner">
+        <div class="stat-left">
+          <span class="stat-number">{{ totalPrestados }}</span>
+          <span class="stat-label">EN PRÉSTAMO</span>
+        </div>
+        <div class="stat-right">
+          <ion-icon name="swap-horizontal-outline" class="stat-icon"></ion-icon>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════ SECCIÓN 2: Alertas de Seguridad ═══════ -->
+  <div class="section-header">
+    <span class="section-title">ALERTAS DE SEGURIDAD</span>
+    <span class="section-badge section-badge--danger">{{ alertas.length }}</span>
+  </div>
+
+  @for (alerta of alertas; track alerta.id) {
+  <div class="alert-card">
+    <div class="alert-card-inner">
+      <!-- Icono principal -->
+      <div class="alert-icon-wrap">
+        <ion-icon name="alert-circle" class="alert-icon"></ion-icon>
+      </div>
+
+      <!-- Contenido -->
+      <div class="alert-body">
+        <h3 class="alert-title">{{ alerta.tipo }}</h3>
+        <span class="alert-time">{{ alerta.hora }}</span>
+
+        <div class="alert-details">
+          <p>Activo: <strong>{{ alerta.equipo }}</strong></p>
+          <p>Sensor: <strong>{{ alerta.sensor }}</strong></p>
+        </div>
+
+        <!-- Panel Reconocimiento Facial -->
+        <div class="camera-panel">
+          <div class="camera-panel-header">RECONOCIMIENTO FACIAL</div>
+          <p class="camera-line">Sujeto: <strong>{{ alerta.camara.sujeto }}</strong></p>
+          <p class="camera-line">
+            Confianza:
+            <span class="confidence-tag" [class.confidence--high]="alerta.camara.confianza >= 90">
+              {{ alerta.camara.confianza }}%
+            </span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  }
+
+  <!-- ═══════ SECCIÓN 3: Equipos Fuera del Laboratorio ═══════ -->
+  <div class="section-header">
+    <span class="section-title">EQUIPOS FUERA DEL LABORATORIO</span>
+    <span class="section-badge section-badge--primary">{{ prestamosActivos.length }}</span>
+  </div>
+
+  @if (prestamosActivos.length === 0) {
+  <div class="empty-transit">
+    <p>No hay equipos fuera del laboratorio en este momento.</p>
+  </div>
+  }
+
+  @for (prestamo of prestamosActivos; track prestamo.id) {
+  <div class="transit-card">
+    <div class="transit-card-inner">
+      <!-- Avatar -->
+      <div class="transit-icon-wrap">
+        <ion-icon name="laptop-outline" class="transit-icon"></ion-icon>
+      </div>
+
+      <!-- Info -->
+      <div class="transit-body">
+        <h3 class="transit-equipo">{{ prestamo.equipo }}</h3>
+        <div class="transit-meta">
+          <span class="transit-meta-line">
+            <ion-icon name="person"></ion-icon>
+            {{ prestamo.estudiante }} ({{ prestamo.matricula }})
+          </span>
+          <span class="transit-meta-line">
+            <ion-icon name="time"></ion-icon>
+            Salida: {{ prestamo.fecha_de_salida | date:'short' }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Botón -->
+      <button class="devolver-btn" (click)="revocarPrestamo(prestamo)">
+        <ion-icon name="return-down-back"></ion-icon>
+        Devolver
+      </button>
+    </div>
+  </div>
+  }
+
+  <!-- ═══════ SECCIÓN 4: Historial de Devoluciones ═══════ -->
+  <div class="section-header" style="margin-top: 20px;">
+    <span class="section-title">HISTORIAL DE DEVOLUCIONES</span>
+    <span class="section-badge section-badge--success">{{ prestamosFinalizados.length }}</span>
+  </div>
+
+  @if (prestamosFinalizados.length === 0) {
+  <div class="empty-transit empty-transit--success">
+    <p>No hay devoluciones registradas aún.</p>
+  </div>
+  }
+
+  @for (prestamo of prestamosFinalizados; track prestamo.id) {
+  <div class="historial-card">
+    <div class="historial-card-inner">
+      <!-- Icono -->
+      <div class="historial-icon-wrap">
+        <ion-icon name="checkmark-done-outline" class="historial-icon"></ion-icon>
+      </div>
+
+      <!-- Info -->
+      <div class="historial-body">
+        <h3 class="historial-equipo">{{ prestamo.activos?.nombre ?? 'Equipo desconocido' }}</h3>
+        <div class="historial-meta">
+          <span class="historial-meta-line">
+            <ion-icon name="person"></ion-icon>
+            {{ prestamo.matricula }}
+          </span>
+          <span class="historial-meta-line">
+            <ion-icon name="time"></ion-icon>
+            Devuelto: {{ prestamo.expira_en | date:'short' }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Botón Ver Evidencia -->
+      @if (prestamo.url_evidencia_devolucion) {
+      <button class="evidencia-btn" (click)="abrirEvidencia(prestamo.url_evidencia_devolucion)">
+        <ion-icon name="image-outline"></ion-icon>
+        Ver Evidencia
+      </button>
+      } @else {
+      <span class="sin-evidencia-badge">
+        <ion-icon name="close-circle-outline"></ion-icon>
+        Sin foto
+      </span>
+      }
+    </div>
+  </div>
+  }
+
+  <!-- ═══════ Footer ═══════ -->
+  <footer class="dashboard-footer">
+    <span>SecureLab © 2025 · Monitoreo inteligente de activos</span>
+  </footer>
+
+  <!-- ═══════ Modal: Evidencia de Devolución ═══════ -->
+  <ion-modal [isOpen]="isEvidenciaModalOpen" (didDismiss)="cerrarEvidencia()">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Evidencia de Devolución</ion-title>
+          <ion-buttons slot="end">
+            <button class="modal-close-btn" (click)="cerrarEvidencia()">
+              Cerrar
+            </button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="evidencia-modal-content">
+        @if (fotoSeleccionada) {
+        <div class="evidencia-img-wrap">
+          <img [src]="fotoSeleccionada" alt="Evidencia de devolución" class="evidencia-img" />
+        </div>
+        }
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+</ion-content>

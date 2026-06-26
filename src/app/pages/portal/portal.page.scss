@@ -1,0 +1,393 @@
+// ═══════════════════════════════════════════════════
+// SecureLab Portal – Premium Dark Cybersecurity UI
+// Matching project design system
+// ═══════════════════════════════════════════════════
+
+// ── Variables locales (same tokens as dashboard) ──
+$bg-deep: #070b14;
+$bg-card: #0c1220;
+$bg-card-alt: #111827;
+$border-subtle: rgba(255, 255, 255, 0.06);
+$cyan: #00d4ff;
+$green: #00e676;
+$red: #ff1744;
+$amber: #ffc107;
+$text-primary: #e6edf3;
+$text-secondary: #7a8a9e;
+$text-muted: #4a5568;
+$radius: 14px;
+
+// ── Header ──
+.portal-header {
+  ion-toolbar {
+    --background: #{$bg-deep};
+    --border-color: #{$border-subtle};
+    --color: #{$text-primary};
+  }
+}
+
+.header-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.brand-icon {
+  font-size: 24px;
+  color: $cyan;
+  filter: drop-shadow(0 0 6px rgba($cyan, 0.5));
+}
+
+.brand-text {
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: $cyan;
+}
+
+// ── Content Background ──
+.portal-content {
+  --background: #{$bg-deep};
+  --padding-start: 16px;
+  --padding-end: 16px;
+}
+
+// ═══════ HERO SECTION ═══════
+.portal-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 32px 16px 24px;
+}
+
+.hero-icon-wrap {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: rgba($cyan, 0.08);
+  border: 2px solid rgba($cyan, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  animation: pulse-glow 2.5s ease-in-out infinite;
+}
+
+.hero-icon {
+  font-size: 38px;
+  color: $cyan;
+  filter: drop-shadow(0 0 8px rgba($cyan, 0.4));
+}
+
+@keyframes pulse-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba($cyan, 0.15);
+  }
+  50% {
+    box-shadow: 0 0 20px 6px rgba($cyan, 0.15);
+  }
+}
+
+.portal-title {
+  font-size: 24px;
+  font-weight: 800;
+  color: $text-primary;
+  margin: 0 0 8px;
+  letter-spacing: -0.3px;
+}
+
+.portal-subtitle {
+  font-size: 14px;
+  color: $text-secondary;
+  margin: 0;
+  line-height: 1.5;
+  max-width: 300px;
+
+  strong {
+    color: $cyan;
+    font-weight: 700;
+  }
+}
+
+// ═══════ CARD ═══════
+.portal-card {
+  background: $bg-card;
+  border-radius: $radius;
+  border: 1px solid $border-subtle;
+  overflow: hidden;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 16px;
+  border-bottom: 1px solid $border-subtle;
+}
+
+.card-header-icon {
+  font-size: 18px;
+  color: $cyan;
+}
+
+.card-header-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: $text-secondary;
+  flex: 1;
+}
+
+.card-header-badge {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  background: $cyan;
+  color: #000;
+  box-shadow: 0 0 10px rgba($cyan, 0.3);
+}
+
+// ── Select ──
+.portal-select {
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --padding-top: 14px;
+  --padding-bottom: 14px;
+  --color: #{$text-primary};
+  --placeholder-color: #{$text-muted};
+  --background: transparent;
+  width: 100%;
+  font-size: 15px;
+}
+
+// ── Empty State ──
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 28px 20px;
+  text-align: center;
+
+  p {
+    font-size: 13px;
+    color: $text-muted;
+    margin: 0;
+    max-width: 240px;
+  }
+}
+
+.empty-icon {
+  font-size: 32px;
+  color: $amber;
+  margin-bottom: 12px;
+  opacity: 0.7;
+}
+
+// ═══════ SELECTION INDICATOR ═══════
+.selection-indicator {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  background: rgba($green, 0.08);
+  border: 1px solid rgba($green, 0.2);
+  border-radius: 10px;
+  margin-bottom: 16px;
+  animation: slide-in 0.3s ease-out;
+
+  span {
+    font-size: 13px;
+    color: $green;
+    font-weight: 600;
+  }
+}
+
+.selection-icon {
+  font-size: 20px;
+  color: $green;
+  flex-shrink: 0;
+}
+
+@keyframes slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// ═══════ GENERATE BUTTON ═══════
+.action-section {
+  padding: 8px 0 20px;
+}
+
+.generate-btn {
+  --background: linear-gradient(135deg, #{$cyan}, #0091ea);
+  --background-hover: linear-gradient(135deg, #33ddff, #00a8f0);
+  --border-radius: 14px;
+  --box-shadow: 0 4px 20px rgba(0, 212, 255, 0.3);
+  --padding-top: 18px;
+  --padding-bottom: 18px;
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  text-transform: none;
+  transition: all 0.2s ease;
+
+  &::part(native) {
+    min-height: 56px;
+  }
+
+  &[disabled] {
+    --background: #{$bg-card-alt};
+    --box-shadow: none;
+    --color: #{$text-muted};
+    opacity: 0.6;
+  }
+}
+
+// ═══════ INFO CARD ═══════
+.info-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid $border-subtle;
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.info-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  span {
+    font-size: 13px;
+    color: $text-secondary;
+    line-height: 1.4;
+  }
+}
+
+.info-icon {
+  font-size: 18px;
+  color: $cyan;
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+
+// ═══════ FOOTER ═══════
+.portal-footer {
+  text-align: center;
+  padding: 24px 16px 32px;
+  border-top: 1px solid $border-subtle;
+  margin-top: 24px;
+
+  span {
+    font-size: 11px;
+    color: $text-muted;
+    letter-spacing: 0.5px;
+  }
+}
+
+// ═══════ PRÉSTAMOS ACTIVOS CARD ═══════
+.prestamos-card {
+  margin-top: 20px;
+}
+
+.empty-icon--ok {
+  color: $green !important;
+}
+
+.prestamo-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-bottom: 1px solid $border-subtle;
+  gap: 12px;
+  transition: background 0.15s ease;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.02);
+  }
+}
+
+.prestamo-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+}
+
+.prestamo-equipo-icon {
+  font-size: 20px;
+  color: $cyan;
+  flex-shrink: 0;
+}
+
+.prestamo-nombre {
+  font-size: 14px;
+  font-weight: 600;
+  color: $text-primary;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.devolucion-btn {
+  flex-shrink: 0;
+  --border-radius: 8px;
+  font-weight: 700;
+  font-size: 12px;
+  text-transform: none;
+  letter-spacing: 0.3px;
+}
+
+.devolucion-btn--done {
+  --background: rgba($green, 0.12);
+  --color: #{$green};
+  --box-shadow: none;
+  opacity: 0.85;
+}
+
+// ═══════ RESPONSIVE ═══════
+@media (min-width: 768px) {
+  .portal-card,
+  .prestamos-card {
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .action-section {
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .info-card {
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+

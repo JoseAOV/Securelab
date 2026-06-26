@@ -1,0 +1,454 @@
+// ═══════════════════════════════════════════════════
+// SecureLab Inventario – Premium Dark Cybersecurity UI
+// Matches Dashboard design language exactly
+// ═══════════════════════════════════════════════════
+
+// ── Variables locales (matching dashboard) ──
+$bg-deep: #070b14;
+$bg-card: #0c1220;
+$bg-card-alt: #111827;
+$border-subtle: rgba(255, 255, 255, 0.06);
+$cyan: #00d4ff;
+$green: #00e676;
+$yellow: #ffc107;
+$red: #ff1744;
+$purple: #b388ff;
+$text-primary: #e6edf3;
+$text-secondary: #7a8a9e;
+$text-muted: #4a5568;
+$radius: 14px;
+
+// ── Header ──
+.inventario-header {
+  ion-toolbar {
+    --background: #{$bg-deep};
+    --border-color: #{$border-subtle};
+    --color: #{$text-primary};
+  }
+}
+
+.header-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.brand-icon {
+  font-size: 24px;
+  color: $cyan;
+  filter: drop-shadow(0 0 6px rgba($cyan, 0.5));
+}
+
+.brand-text {
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: $cyan;
+}
+
+// ── Content Background ──
+.inventario-content {
+  --background: #{$bg-deep};
+  --padding-start: 16px;
+  --padding-end: 16px;
+}
+
+// ── Page Title ──
+.page-title-section {
+  padding: 20px 0 8px;
+}
+
+.page-title {
+  font-size: 26px;
+  font-weight: 800;
+  color: $text-primary;
+  margin: 0 0 4px;
+  letter-spacing: -0.3px;
+}
+
+.page-subtitle {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  color: $text-secondary;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+// ═══════ SEARCH BAR ═══════
+.search-wrapper {
+  margin: 12px 0 20px;
+}
+
+.custom-searchbar {
+  --background: #{$bg-card};
+  --border-radius: 12px;
+  --box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+  --color: #{$text-primary};
+  --placeholder-color: #{$text-muted};
+  --icon-color: #{$cyan};
+  --clear-button-color: #{$text-secondary};
+  padding: 0;
+}
+
+// ═══════ SECTION HEADER ═══════
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 0 12px;
+  margin-bottom: 4px;
+}
+
+.section-title {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: $text-secondary;
+}
+
+.section-badge {
+  min-width: 24px;
+  height: 24px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: #000;
+  background: $cyan;
+  padding: 0 8px;
+  box-shadow: 0 0 10px rgba($cyan, 0.3);
+}
+
+// ═══════ LOADING STATE ═══════
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  gap: 16px;
+}
+
+.loading-spinner {
+  color: $cyan;
+  font-size: 36px;
+}
+
+.loading-text {
+  font-size: 14px;
+  color: $text-muted;
+  margin: 0;
+}
+
+// ═══════ EMPTY STATE ═══════
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  gap: 16px;
+}
+
+.empty-icon {
+  font-size: 56px;
+  color: $text-muted;
+  opacity: 0.4;
+}
+
+.empty-text {
+  font-size: 14px;
+  color: $text-muted;
+  text-align: center;
+  margin: 0;
+  line-height: 1.5;
+}
+
+// ═══════ ACTIVOS LIST ═══════
+.activos-list {
+  background: transparent;
+  padding: 0;
+}
+
+.activo-item {
+  --background: #{$bg-card};
+  --color: #{$text-primary};
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --padding-top: 14px;
+  --padding-bottom: 14px;
+  --inner-padding-end: 0;
+  --border-color: #{$border-subtle};
+  margin-bottom: 10px;
+  border-radius: $radius;
+  overflow: hidden;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.25);
+  border-left: 3px solid transparent;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
+  }
+}
+
+// ═══════ STATUS ICON ═══════
+.activo-status-icon {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 14px;
+
+  ion-icon {
+    font-size: 20px;
+  }
+
+  &.estado--disponible {
+    background: rgba($green, 0.12);
+    border: 1px solid rgba($green, 0.2);
+
+    ion-icon {
+      color: $green;
+    }
+  }
+
+  &.estado--prestamo {
+    background: rgba($yellow, 0.12);
+    border: 1px solid rgba($yellow, 0.2);
+
+    ion-icon {
+      color: $yellow;
+    }
+  }
+
+  &.estado--mantenimiento {
+    background: rgba($purple, 0.12);
+    border: 1px solid rgba($purple, 0.2);
+
+    ion-icon {
+      color: $purple;
+    }
+  }
+
+  &.estado--default {
+    background: rgba($text-muted, 0.12);
+    border: 1px solid rgba($text-muted, 0.2);
+
+    ion-icon {
+      color: $text-muted;
+    }
+  }
+}
+
+// ═══════ ACTIVO INFO ═══════
+.activo-nombre {
+  font-size: 15px;
+  font-weight: 700;
+  color: $text-primary;
+  margin: 0 0 6px;
+}
+
+.activo-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.activo-ubicacion {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: $text-secondary;
+
+  ion-icon {
+    font-size: 13px;
+    color: $cyan;
+    flex-shrink: 0;
+  }
+}
+
+.activo-estado-tag {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  text-transform: uppercase;
+
+  &.estado--disponible {
+    background: rgba($green, 0.15);
+    color: $green;
+    border: 1px solid rgba($green, 0.25);
+  }
+
+  &.estado--prestamo {
+    background: rgba($yellow, 0.15);
+    color: $yellow;
+    border: 1px solid rgba($yellow, 0.25);
+  }
+
+  &.estado--mantenimiento {
+    background: rgba($purple, 0.15);
+    color: $purple;
+    border: 1px solid rgba($purple, 0.25);
+  }
+
+  &.estado--default {
+    background: rgba($text-muted, 0.15);
+    color: $text-secondary;
+    border: 1px solid rgba($text-muted, 0.25);
+  }
+}
+
+.activo-rfid {
+  font-size: 11px;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+  color: $text-muted;
+  letter-spacing: 0.5px;
+  margin: 6px 0 0;
+}
+
+// ═══════ TOGGLE SECTION ═══════
+.toggle-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding-left: 12px;
+}
+
+.toggle-label {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: $text-muted;
+  text-transform: uppercase;
+}
+
+.custom-toggle {
+  --track-background: #{rgba($text-muted, 0.3)};
+  --track-background-checked: #{rgba($green, 0.4)};
+  --handle-background: #{$text-secondary};
+  --handle-background-checked: #{$green};
+  --handle-box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+// ═══════ FOOTER ═══════
+.inventario-footer {
+  text-align: center;
+  padding: 24px 16px 32px;
+  border-top: 1px solid $border-subtle;
+  margin-top: 16px;
+
+  span {
+    font-size: 11px;
+    color: $text-muted;
+    letter-spacing: 0.5px;
+  }
+}
+
+// ═══════ RESPONSIVE ═══════
+@media (min-width: 768px) {
+  .activos-list {
+    max-width: 700px;
+  }
+}
+
+// ═══════ FAB BUTTON ═══════
+.fab-add {
+  --background: #{$cyan};
+  --background-activated: #{darken($cyan, 10%)};
+  --color: #000;
+  --box-shadow: 0 4px 20px rgba($cyan, 0.4);
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: scale(1.08);
+  }
+}
+
+// ═══════ MODAL: Registrar Activo ═══════
+.modal-registrar {
+  --background: #{$bg-deep};
+}
+
+.modal-header {
+  ion-toolbar {
+    --background: #{$bg-deep};
+    --border-color: #{$border-subtle};
+    --color: #{$text-primary};
+  }
+
+  ion-title {
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+  }
+}
+
+.modal-close-btn {
+  --color: #{$text-secondary};
+  font-size: 22px;
+}
+
+.modal-content {
+  --background: #{$bg-deep};
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --padding-top: 12px;
+}
+
+.form-list {
+  background: transparent;
+  margin: 0;
+  padding: 0;
+}
+
+.form-item {
+  --background: #{$bg-card};
+  --color: #{$text-primary};
+  --border-color: #{$border-subtle};
+  --highlight-color-focused: #{$cyan};
+  --highlight-color-valid: #{$green};
+  margin-bottom: 12px;
+  border-radius: 12px;
+  overflow: hidden;
+
+  ion-input,
+  ion-textarea {
+    --color: #{$text-primary};
+    --placeholder-color: #{$text-muted};
+    font-size: 14px;
+  }
+}
+
+.form-actions {
+  padding: 20px 0 32px;
+}
+
+.btn-guardar {
+  --background: #{$cyan};
+  --background-activated: #{darken($cyan, 10%)};
+  --color: #000;
+  --border-radius: 12px;
+  --box-shadow: 0 4px 16px rgba($cyan, 0.3);
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.5px;
+  height: 50px;
+
+  &[disabled] {
+    --background: #{rgba($text-muted, 0.2)};
+    --color: #{$text-muted};
+    --box-shadow: none;
+  }
+}
