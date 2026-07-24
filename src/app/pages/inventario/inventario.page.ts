@@ -53,8 +53,37 @@ import {
   closeSharp,
   saveOutline,
   saveSharp,
+  qrCodeOutline,
+  qrCodeSharp,
+  archiveOutline,
+  archiveSharp,
+  lockClosedOutline,
+  laptopOutline,
+  videocamOutline,
+  printOutline,
+  pulseOutline,
+  tvOutline,
+  desktopOutline,
+  chevronDownOutline,
 } from 'ionicons/icons';
 import { ActivosService } from '../../services/activos.service';
+import * as QRCode from 'qrcode';
+
+type FiltroEstado = 'todos' | 'en_laboratorio' | 'en_prestamo';
+
+interface IconoActivo {
+  icono: string;
+  clase: string;
+}
+
+const ICONOS_POR_PALABRA: { claves: string[]; icono: string; clase: string }[] = [
+  { claves: ['laptop', 'macbook', 'notebook'], icono: 'laptop-outline', clase: 'icono--azul' },
+  { claves: ['camara', 'cámara', 'camera'], icono: 'videocam-outline', clase: 'icono--oscuro' },
+  { claves: ['impresora', 'printer'], icono: 'print-outline', clase: 'icono--naranja' },
+  { claves: ['arduino', 'kit'], icono: 'hardware-chip-outline', clase: 'icono--azul' },
+  { claves: ['osciloscopio', 'scope'], icono: 'pulse-outline', clase: 'icono--morado' },
+  { claves: ['proyector', 'projector'], icono: 'tv-outline', clase: 'icono--naranja' },
+];
 
 @Component({
   selector: 'app-inventario',
@@ -92,9 +121,16 @@ export class InventarioPage implements OnInit, ViewWillEnter {
   activosFiltrados: any[] = [];
   cargando = true;
   searchTerm = '';
+  filtroActivo: FiltroEstado = 'todos';
+  cantidadVisible = 10;
 
   // Modal de alta de activos
   isModalOpen: boolean = false;
+
+  // Modal de QR de un activo
+  isQrModalOpen: boolean = false;
+  activoParaQr: any = null;
+  qrDataUrl: string | null = null;
   nuevoActivo: any = {
     nombre: '',
     descripcion: '',
@@ -133,6 +169,18 @@ export class InventarioPage implements OnInit, ViewWillEnter {
       closeSharp,
       saveOutline,
       saveSharp,
+      qrCodeOutline,
+      qrCodeSharp,
+      archiveOutline,
+      archiveSharp,
+      lockClosedOutline,
+      laptopOutline,
+      videocamOutline,
+      printOutline,
+      pulseOutline,
+      tvOutline,
+      desktopOutline,
+      chevronDownOutline,
     });
   }
 
@@ -154,23 +202,56 @@ export class InventarioPage implements OnInit, ViewWillEnter {
     event.target.complete();
   }
 
+  // ── Stats (alimentan las tarjetas-filtro de arriba) ──
+  get totalEquipos(): number {
+    return this.activos.length;
+  }
+
+  get totalDisponibles(): number {
+    return this.activos.filter((a) => a.estado === 'en_laboratorio').length;
+  }
+
+  get totalEnPrestamo(): number {
+    return this.activos.filter((a) => a.estado === 'en_prestamo').length;
+  }
+
+  /**
+   * Las tarjetas de stats funcionan como botones de filtro. No hay
+   * tarjeta/filtro de "Mantenimiento" a propósito — no se va a usar esa
+   * función por ahora.
+   */
+  setFiltro(filtro: FiltroEstado): void {
+    this.filtroActivo = this.filtroActivo === filtro ? 'todos' : filtro;
+    this.filtrarActivos();
+  }
+
   filtrarActivos(): void {
     const term = this.searchTerm.toLowerCase().trim();
-    if (!term) {
-      this.activosFiltrados = [...this.activos];
-      return;
+
+    let base = this.activos;
+    if (this.filtroActivo === 'en_laboratorio' || this.filtroActivo === 'en_prestamo') {
+      base = base.filter((a) => a.estado === this.filtroActivo);
     }
-    this.activosFiltrados = this.activos.filter(
-      (a) =>
-        a.nombre?.toLowerCase().includes(term) ||
-        a.ubicacion?.toLowerCase().includes(term) ||
-        a.rfid_tag?.toLowerCase().includes(term)
-    );
+    if (term) {
+      base = base.filter(
+        (a) =>
+          a.nombre?.toLowerCase().includes(term) ||
+          a.ubicacion?.toLowerCase().includes(term) ||
+          a.rfid_tag?.toLowerCase().includes(term)
+      );
+    }
+
+    this.activosFiltrados = [...base];
+    this.cantidadVisible = 10;
   }
 
   onSearchChange(event: any): void {
     this.searchTerm = event.detail.value || '';
     this.filtrarActivos();
+  }
+
+  cargarMasResultados(): void {
+    this.cantidadVisible += 10;
   }
 
   async cambiarPermiso(activo: any, event: any): Promise<void> {
@@ -205,6 +286,33 @@ export class InventarioPage implements OnInit, ViewWillEnter {
     }
   }
 
+  /**
+   * Genera y muestra el código QR de un activo (codifica su rfid_tag),
+   * listo para que el admin lo capture/imprima y lo pegue en el equipo.
+   */
+  async verQr(activo: any): Promise<void> {
+    this.activoParaQr = activo;
+    this.qrDataUrl = await QRCode.toDataURL(activo.rfid_tag, { width: 280 });
+    this.isQrModalOpen = true;
+  }
+
+  cerrarQr(): void {
+    this.isQrModalOpen = false;
+    this.activoParaQr = null;
+    this.qrDataUrl = null;
+  }
+
+  /**
+   * Ícono y color por tipo de equipo, derivado de palabras clave del
+   * nombre — no existe una columna "categoria" en activos, así que esto
+   * es puramente de presentación.
+   */
+  getIconoActivo(nombre: string): IconoActivo {
+    const n = (nombre || '').toLowerCase();
+    const match = ICONOS_POR_PALABRA.find((r) => r.claves.some((c) => n.includes(c)));
+    return match ? { icono: match.icono, clase: match.clase } : { icono: 'desktop-outline', clase: 'icono--azul' };
+  }
+
   getEstadoIcon(estado: string): string {
     switch (estado) {
       case 'en_laboratorio':
@@ -236,7 +344,7 @@ export class InventarioPage implements OnInit, ViewWillEnter {
       case 'en_laboratorio':
         return 'Disponible';
       case 'en_prestamo':
-        return 'En prestamo';
+        return 'Prestado';
       case 'en_mantenimiento':
         return 'Mantenimiento';
       default:

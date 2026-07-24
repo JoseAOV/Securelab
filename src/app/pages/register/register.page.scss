@@ -1,0 +1,160 @@
+// Misma paleta que login.page.scss (tema oscuro navy, según Figma).
+$auth-bg: #0e1428;
+$auth-card-bg: #1a2242;
+$auth-border: rgba(140, 160, 220, 0.22);
+$auth-input-bg: #10152c;
+$auth-input-border: rgba(140, 160, 220, 0.28);
+$auth-text: #eef1fb;
+$auth-text-muted: #97a1c4;
+$auth-accent: #5b8dfd;
+$auth-accent-dark: #3661e0;
+$auth-accent-light: #74b3ff;
+
+.auth-content {
+  --background: #{$auth-bg};
+}
+
+.auth-wrap {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 20px;
+}
+
+.auth-brand {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.auth-icon-badge {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 10px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #4a5bb0, #6f8bf0);
+  box-shadow: 0 8px 24px rgba(91, 141, 253, 0.4);
+
+  ion-icon {
+    font-size: 24px;
+    color: #fff;
+  }
+}
+
+.auth-title {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: $auth-text;
+}
+
+.auth-subtitle {
+  margin: 4px 0 0;
+  font-size: 0.82rem;
+  color: $auth-text-muted;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 400px;
+  background: $auth-card-bg;
+  border: 1px solid $auth-border;
+  border-radius: 20px;
+  padding: 24px;
+}
+
+.auth-card-title {
+  margin: 0 0 2px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: $auth-text;
+}
+
+.auth-card-subtitle {
+  margin: 0 0 16px;
+  font-size: 0.82rem;
+  color: $auth-text-muted;
+}
+
+.auth-label {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: $auth-text-muted;
+  margin-bottom: 6px;
+
+  &--spaced {
+    margin-top: 14px;
+  }
+}
+
+.auth-input {
+  --background: #{$auth-input-bg};
+  --border-radius: 10px;
+  --padding-start: 12px;
+  border: 1px solid $auth-input-border;
+  border-radius: 10px;
+  margin-bottom: 4px;
+
+  ion-icon {
+    color: $auth-text-muted;
+    margin-right: 8px;
+  }
+
+  ion-input {
+    --color: #{$auth-text};
+    --placeholder-color: #5a6280;
+  }
+}
+
+.auth-info-box {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  margin-top: 16px;
+  padding: 12px;
+  border-radius: 10px;
+  background: rgba(79, 125, 255, 0.08);
+  border: 1px solid rgba(79, 125, 255, 0.2);
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: $auth-text-muted;
+
+  ion-icon {
+    flex-shrink: 0;
+    font-size: 18px;
+    color: $auth-accent;
+    margin-top: 1px;
+  }
+}
+
+.auth-btn-primary {
+  margin-top: 16px;
+  --background: linear-gradient(90deg, #{$auth-accent-dark}, #{$auth-accent-light});
+  --border-radius: 10px;
+  --box-shadow: 0 8px 24px rgba(91, 141, 253, 0.45);
+  font-weight: 600;
+}
+
+.auth-footer-link {
+  margin-top: 20px;
+  font-size: 0.85rem;
+  color: $auth-text-muted;
+  text-align: center;
+
+  a {
+    color: $auth-accent;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  &--inside {
+    margin-top: 16px;
+  }
+}

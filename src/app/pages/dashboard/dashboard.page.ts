@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import {
   IonHeader,
@@ -11,9 +11,11 @@ import {
   IonRefresher,
   IonRefresherContent,
   IonModal,
+  IonButton,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { ViewWillEnter } from '@ionic/angular/standalone';
+import { ViewWillEnter, ViewWillLeave } from '@ionic/angular/standalone';
+import { RealtimeChannel } from '@supabase/supabase-js';
 import {
   checkmarkCircleOutline,
   checkmarkCircleSharp,
@@ -23,56 +25,28 @@ import {
   warningSharp,
   alertCircleOutline,
   alertCircleSharp,
-  videocamOutline,
-  videocamSharp,
   laptopOutline,
   laptopSharp,
   personOutline,
   personSharp,
   timeOutline,
   timeSharp,
-  locationOutline,
-  locationSharp,
-  returnDownBackOutline,
-  returnDownBackSharp,
-  shieldCheckmarkOutline,
-  shieldCheckmarkSharp,
   ellipseOutline,
-  pulseOutline,
-  pulseSharp,
-  eyeOutline,
-  eyeSharp,
   notificationsOutline,
   notificationsSharp,
   menuOutline,
   menuSharp,
-  desktopOutline,
-  desktopSharp,
   imageOutline,
   imageSharp,
   checkmarkDoneOutline,
   checkmarkDoneSharp,
-  closeCircleOutline,
-  closeCircleSharp,
+  closeOutline,
+  closeSharp,
+  syncOutline,
+  syncSharp,
 } from 'ionicons/icons';
 
-// ── Interfaces ──
-interface AlertaCamara {
-  sujeto: string;
-  confianza: number;
-}
-
-interface Alerta {
-  id: number;
-  tipo: string;
-  equipo: string;
-  hora: string;
-  sensor: string;
-  camara: AlertaCamara;
-  severidad: 'critica' | 'alta' | 'media';
-}
-
-import { ActivosService } from '../../services/activos.service';
+import { EventosService } from '../../services/eventos.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -91,41 +65,28 @@ import { ActivosService } from '../../services/activos.service';
     IonRefresher,
     IonRefresherContent,
     IonModal,
+    IonButton,
   ],
 })
-export class DashboardPage implements OnInit, ViewWillEnter {
-  // ── Estadísticas (datos reales) ──
-  totalDisponibles = 0;
-  totalPrestados = 0;
-  notificaciones = 0;
+export class DashboardPage implements OnInit, OnDestroy, ViewWillEnter, ViewWillLeave {
+  // ── Feed de actividad (datos reales) ──
+  feed: any[] = [];
+  ultimoAcceso: any = null;
+  actividadReciente: any[] = [];
 
-  // ── Alertas de Seguridad (Mock Data — se conectará a Supabase en un ticket futuro) ──
-  alertas: Alerta[] = [
-    {
-      id: 1,
-      tipo: 'Salida no autorizada detectada',
-      equipo: 'Laptop HP ProBook',
-      hora: '10:45 hs',
-      sensor: 'Puerta Principal Lab',
-      camara: {
-        sujeto: 'María Fernanda',
-        confianza: 92,
-      },
-      severidad: 'critica',
-    },
-  ];
-
-  // ── Préstamos Activos (datos reales desde vista SQL) ──
-  prestamosActivos: any[] = [];
-
-  // ── Historial de Devoluciones ──
-  prestamosFinalizados: any[] = [];
+  // ── Estado de conexión en vivo ──
+  conectado = false;
+  private canal: RealtimeChannel | null = null;
 
   // ── Modal de Evidencia ──
   isEvidenciaModalOpen = false;
   fotoSeleccionada: string | null = null;
 
-  constructor(private activosService: ActivosService) {
+  // ── Modal de Historial Completo ──
+  isHistorialModalOpen = false;
+  historialCompleto: any[] = [];
+
+  constructor(private eventosService: EventosService) {
     addIcons({
       checkmarkCircleOutline,
       checkmarkCircleSharp,
@@ -135,105 +96,117 @@ export class DashboardPage implements OnInit, ViewWillEnter {
       warningSharp,
       alertCircleOutline,
       alertCircleSharp,
-      videocamOutline,
-      videocamSharp,
       laptopOutline,
       laptopSharp,
       personOutline,
       personSharp,
       timeOutline,
       timeSharp,
-      locationOutline,
-      locationSharp,
-      returnDownBackOutline,
-      returnDownBackSharp,
-      shieldCheckmarkOutline,
-      shieldCheckmarkSharp,
       ellipseOutline,
-      pulseOutline,
-      pulseSharp,
-      eyeOutline,
-      eyeSharp,
       notificationsOutline,
       notificationsSharp,
       menuOutline,
       menuSharp,
-      desktopOutline,
-      desktopSharp,
       imageOutline,
       imageSharp,
       checkmarkDoneOutline,
       checkmarkDoneSharp,
-      closeCircleOutline,
-      closeCircleSharp,
+      closeOutline,
+      closeSharp,
+      syncOutline,
+      syncSharp,
     });
   }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {}
 
-  /**
-   * Se ejecuta cada vez que la vista entra al viewport.
-   * Garantiza datos frescos al volver desde otra página.
-   */
   async ionViewWillEnter(): Promise<void> {
     await this.cargarDatos();
+    this.canal = this.eventosService.suscribirseACambios(() => this.cargarDatos());
+    this.conectado = true;
   }
 
-  /**
-   * Carga estadísticas reales y préstamos activos desde Supabase.
-   */
+  async ionViewWillLeave(): Promise<void> {
+    if (this.canal) {
+      await this.eventosService.desuscribirse(this.canal);
+      this.canal = null;
+    }
+    this.conectado = false;
+  }
+
+  ngOnDestroy(): void {
+    if (this.canal) {
+      this.eventosService.desuscribirse(this.canal);
+      this.canal = null;
+    }
+  }
+
   async cargarDatos(): Promise<void> {
-    // 1. Obtener todos los activos para calcular estadísticas
-    const todosLosActivos = await this.activosService.getTodosLosActivos();
-
-    this.totalDisponibles = todosLosActivos.filter(
-      (a) => a.estado === 'en_laboratorio'
-    ).length;
-
-    this.totalPrestados = todosLosActivos.filter(
-      (a) => a.estado === 'en_prestamo'
-    ).length;
-
-    // 2. Obtener préstamos activos desde la vista SQL
-    this.prestamosActivos = await this.activosService.getActivosPrestados();
-
-    // 3. Obtener historial de devoluciones
-    this.prestamosFinalizados = await this.activosService.getPrestamosFinalizados();
-
-
-    // Notificaciones = alertas + préstamos activos
-    this.notificaciones = this.alertas.length + this.prestamosActivos.length;
+    this.feed = await this.eventosService.getActividadReciente(30);
+    this.ultimoAcceso = this.feed[0] ?? null;
+    this.actividadReciente = this.feed.slice(1);
   }
 
-  /**
-   * Manejador de pull-to-refresh.
-   */
   async handleRefresh(event: any): Promise<void> {
     await this.cargarDatos();
     event.target.complete();
   }
 
   /**
-   * Acción placeholder para revocar un préstamo.
-   * Se conectará a Supabase en un ticket futuro.
+   * Texto relativo tipo "Just now" / "hace 5 min" / hora exacta si ya pasó
+   * más de una hora.
    */
-  revocarPrestamo(prestamo: any): void {
-    console.log('Revocando préstamo:', prestamo);
+  tiempoRelativo(timestamp: string): string {
+    const segundos = Math.floor((Date.now() - new Date(timestamp).getTime()) / 1000);
+    if (segundos < 60) return 'Just now';
+    const minutos = Math.floor(segundos / 60);
+    if (minutos < 60) return `hace ${minutos} min`;
+    return new Date(timestamp).toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' });
   }
 
   /**
-   * Abre el modal de evidencia con la foto seleccionada.
+   * Deriva el texto del evento a partir de alerta_disparada + direccion.
+   * Se usa tanto en la tarjeta destacada como en la lista.
    */
+  descripcionEvento(item: any): string {
+    if (item.alerta_disparada) return 'Salida no autorizada';
+    return item.direccion === 'entrada' ? 'Devolución exitosa' : 'Salida Autorizada';
+  }
+
+  claseEvento(item: any): string {
+    return item.alerta_disparada ? 'evento--alerta' : 'evento--ok';
+  }
+
+  iconoEvento(item: any): string {
+    if (item.alerta_disparada) return 'warning';
+    return item.direccion === 'entrada' ? 'checkmark-done-outline' : 'swap-horizontal';
+  }
+
+  /**
+   * Abre el modal de evidencia si el ítem de devolución tiene foto.
+   */
+  abrirEvidenciaSiAplica(item: any): void {
+    if (!item.alerta_disparada && item.direccion === 'entrada' && item.url_evidencia_devolucion) {
+      this.abrirEvidencia(item.url_evidencia_devolucion);
+    }
+  }
+
   abrirEvidencia(url: string): void {
     this.fotoSeleccionada = url;
     this.isEvidenciaModalOpen = true;
   }
 
-  /**
-   * Cierra el modal de evidencia y limpia la variable.
-   */
   cerrarEvidencia(): void {
     this.isEvidenciaModalOpen = false;
     this.fotoSeleccionada = null;
+  }
+
+  async abrirHistorialCompleto(): Promise<void> {
+    this.historialCompleto = await this.eventosService.getActividadReciente(100);
+    this.isHistorialModalOpen = true;
+  }
+
+  cerrarHistorial(): void {
+    this.isHistorialModalOpen = false;
   }
 }

@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════
-// SecureLab Inventario — paleta navy/azul (misma que Login/Register/Dashboard)
+// SecureLab Personal — paleta navy/azul (misma que Login/Register/Dashboard/Inventario)
 // ═══════════════════════════════════════════════════
 
 $bg-deep: #0e1428;
@@ -11,14 +11,13 @@ $blue-light: #9db8f5;
 $green: #00e676;
 $amber: #ffb020;
 $red: #ff4d6a;
-$purple: #b98cff;
 $text-primary: #eef1fb;
 $text-secondary: #97a1c4;
 $text-muted: #6b7494;
 $radius: 14px;
 
 // ── Header ──
-.inventario-header {
+.personal-header {
   ion-toolbar {
     --background: #{$bg-deep};
     --border-color: #{$border-subtle};
@@ -46,13 +45,12 @@ $radius: 14px;
   color: $blue;
 }
 
-.inventario-content {
+.personal-content {
   --background: #{$bg-deep};
   --padding-start: 16px;
   --padding-end: 16px;
 }
 
-// ── Page Title ──
 .page-title-section {
   padding: 20px 0 8px;
 }
@@ -66,15 +64,16 @@ $radius: 14px;
 }
 
 .page-subtitle {
-  font-size: 13px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 2px;
   color: $text-secondary;
   margin: 0;
-  line-height: 1.4;
+  text-transform: uppercase;
 }
 
-// ═══════ SEARCH BAR ═══════
 .search-wrapper {
-  margin: 14px 0 16px;
+  margin: 14px 0 20px;
 }
 
 .custom-searchbar {
@@ -88,75 +87,6 @@ $radius: 14px;
   padding: 0;
 }
 
-// ═══════ STAT CARDS (filtros) ═══════
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
-.stat-card {
-  appearance: none;
-  border: 1px solid $border-subtle;
-  border-radius: $radius;
-  background: $bg-card;
-  padding: 12px;
-  text-align: left;
-  cursor: pointer;
-  transition: border-color 0.2s ease, transform 0.15s ease;
-
-  &:active {
-    transform: scale(0.97);
-  }
-
-  &--activa {
-    border-color: currentColor;
-    box-shadow: 0 0 0 1px currentColor, 0 4px 16px rgba(0, 0, 0, 0.3);
-  }
-
-  &--neutral {
-    color: $text-primary;
-  }
-
-  &--azul {
-    color: $blue-light;
-  }
-
-  &--morado {
-    color: $purple;
-  }
-}
-
-.stat-label {
-  display: block;
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  color: $text-secondary;
-  margin-bottom: 6px;
-  text-transform: uppercase;
-}
-
-.stat-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.stat-number {
-  font-size: 24px;
-  font-weight: 800;
-  color: currentColor;
-  line-height: 1;
-}
-
-.stat-icon {
-  font-size: 18px;
-  opacity: 0.8;
-}
-
-// ═══════ SECTION HEADER ═══════
 .section-header {
   display: flex;
   align-items: center;
@@ -187,7 +117,6 @@ $radius: 14px;
   box-shadow: 0 0 10px rgba($blue, 0.3);
 }
 
-// ═══════ LOADING / EMPTY ═══════
 .loading-state,
 .empty-state {
   display: flex;
@@ -218,13 +147,12 @@ $radius: 14px;
   opacity: 0.4;
 }
 
-// ═══════ ACTIVOS LIST ═══════
-.activos-list {
+.personas-list {
   background: transparent;
   padding: 0;
 }
 
-.activo-item {
+.persona-item {
   --background: #{$bg-card};
   --color: #{$text-primary};
   --padding-start: 16px;
@@ -241,100 +169,86 @@ $radius: 14px;
   box-shadow: 0 2px 16px rgba(0, 0, 0, 0.25);
 }
 
-// ═══════ ICONO POR TIPO ═══════
-.activo-tipo-icon {
+.persona-status-icon {
   flex-shrink: 0;
-  width: 42px;
-  height: 42px;
+  width: 40px;
+  height: 40px;
   border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-right: 14px;
   margin-top: 2px;
+  background: rgba($amber, 0.14);
+  border: 1px solid rgba($amber, 0.25);
 
   ion-icon {
     font-size: 20px;
-    color: #fff;
-  }
-
-  &.icono--azul {
-    background: linear-gradient(135deg, $blue-dark, $blue);
-  }
-
-  &.icono--oscuro {
-    background: linear-gradient(135deg, #1c2340, #2a3260);
-  }
-
-  &.icono--naranja {
-    background: linear-gradient(135deg, #c9631f, $amber);
-  }
-
-  &.icono--morado {
-    background: linear-gradient(135deg, #6a3fb5, $purple);
-  }
-}
-
-// ═══════ ACTIVO INFO ═══════
-.activo-nombre {
-  font-size: 15px;
-  font-weight: 700;
-  color: $text-primary;
-  margin: 0 0 3px;
-}
-
-.activo-ubicacion {
-  font-size: 12px;
-  color: $text-secondary;
-  margin: 0 0 6px;
-}
-
-.activo-rfid {
-  font-size: 11px;
-  font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
-  color: $blue-light;
-  letter-spacing: 0.5px;
-  margin: 0 0 10px;
-}
-
-.activo-estado-tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.3px;
-  padding: 3px 10px;
-  border-radius: 20px;
-  margin-bottom: 10px;
-
-  ion-icon {
-    font-size: 7px;
-  }
-
-  &.estado--disponible {
-    background: rgba($green, 0.15);
-    color: $green;
-  }
-
-  &.estado--prestamo {
-    background: rgba($amber, 0.15);
     color: $amber;
   }
 
-  &.estado--mantenimiento {
-    background: rgba($purple, 0.15);
-    color: $purple;
-  }
+  &.persona-status--vinculada {
+    background: rgba($green, 0.14);
+    border: 1px solid rgba($green, 0.25);
 
-  &.estado--default {
-    background: rgba($text-muted, 0.15);
-    color: $text-secondary;
+    ion-icon {
+      color: $green;
+    }
   }
 }
 
-// ═══════ TOGGLE SECTION ═══════
-.toggle-section {
+.persona-nombre {
+  font-size: 15px;
+  font-weight: 700;
+  color: $text-primary;
+  margin: 0 0 6px;
+}
+
+.persona-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.persona-matricula {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: $text-secondary;
+
+  ion-icon {
+    font-size: 13px;
+    color: $blue-light;
+    flex-shrink: 0;
+  }
+}
+
+.persona-rol-tag {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  text-transform: uppercase;
+  background: rgba($blue, 0.18);
+  color: $blue-light;
+  border: 1px solid rgba($blue, 0.3);
+}
+
+.persona-estado {
+  font-size: 11px;
+  color: $amber;
+  margin: 6px 0 10px;
+
+  &--vinculada {
+    color: $green;
+  }
+}
+
+// ═══════ ACCIONES ═══════
+.persona-acciones {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -342,40 +256,38 @@ $radius: 14px;
   border-top: 1px solid $border-subtle;
 }
 
-.toggle-label {
+.activa-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.activa-label {
   font-size: 12px;
   font-weight: 600;
   color: $text-secondary;
 }
 
-.toggle-lock {
-  font-size: 16px;
-  color: $text-muted;
+.botones-fila {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+
+  ion-button {
+    --color: #{$text-secondary};
+    margin: 0;
+  }
 }
 
 .custom-toggle {
-  --track-background: #{rgba($text-muted, 0.3)};
-  --track-background-checked: #{$blue};
+  --track-background: #{rgba($red, 0.35)};
+  --track-background-checked: #{rgba($green, 0.4)};
   --handle-background: #{$text-secondary};
-  --handle-background-checked: #fff;
+  --handle-background-checked: #{$green};
   --handle-box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
 
-// ═══════ CARGAR MÁS ═══════
-.cargar-mas-wrap {
-  margin: 4px 0 16px;
-}
-
-.cargar-mas-btn {
-  --border-color: #{rgba($blue, 0.45)};
-  --color: #{$blue-light};
-  --border-radius: 12px;
-  font-weight: 600;
-  font-size: 13px;
-}
-
-// ═══════ FOOTER ═══════
-.inventario-footer {
+.personal-footer {
   text-align: center;
   padding: 24px 16px 32px;
   border-top: 1px solid $border-subtle;
@@ -388,18 +300,12 @@ $radius: 14px;
   }
 }
 
-// ═══════ RESPONSIVE ═══════
 @media (min-width: 768px) {
-  .activos-list {
+  .personas-list {
     max-width: 700px;
-  }
-
-  .stats-grid {
-    max-width: 500px;
   }
 }
 
-// ═══════ FAB BUTTON ═══════
 .fab-add {
   --background: #{$blue};
   --background-activated: #{$blue-dark};
@@ -407,9 +313,7 @@ $radius: 14px;
   --box-shadow: 0 4px 20px rgba($blue, 0.4);
 }
 
-// ═══════ MODAL: Registrar Activo / QR ═══════
-.modal-registrar,
-.modal-qr {
+.modal-registrar {
   --background: #{$bg-deep};
 }
 
@@ -456,7 +360,7 @@ $radius: 14px;
   overflow: hidden;
 
   ion-input,
-  ion-textarea {
+  ion-select {
     --color: #{$text-primary};
     --placeholder-color: #{$text-muted};
     font-size: 14px;
@@ -482,27 +386,5 @@ $radius: 14px;
     --background: #{rgba($text-muted, 0.2)};
     --color: #{$text-muted};
     --box-shadow: none;
-  }
-}
-
-// ── Modal de QR ──
-.qr-display {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  padding: 24px;
-  color: $text-primary;
-
-  img {
-    margin: 16px 0;
-    border-radius: 8px;
-    background: #fff;
-    padding: 12px;
-  }
-
-  .qr-hint {
-    color: $text-secondary;
-    font-size: 0.85rem;
   }
 }

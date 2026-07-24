@@ -40,29 +40,6 @@ export class ActivosService {
     }
   }
 
-  /**
-   * Obtiene los activos actualmente prestados desde la vista
-   * `vista_activos_prestados` creada en el backend.
-   * Alimenta el Dashboard.
-   */
-  async getActivosPrestados(): Promise<any[]> {
-    try {
-      const { data, error } = await this.supabase
-        .from('vista_activos_prestados')
-        .select('*');
-
-      if (error) {
-        console.error('Error al obtener activos prestados:', error);
-        return [];
-      }
-
-      return data ?? [];
-    } catch (err) {
-      console.error('Excepción inesperada en getActivosPrestados:', err);
-      return [];
-    }
-  }
-
   // ──────────────────────────────────────────────
   //  ESCRITURA Y ACTUALIZACIÓN (Create, Update, Delete)
   // ──────────────────────────────────────────────
@@ -140,35 +117,6 @@ export class ActivosService {
   }
 
   // ──────────────────────────────────────────────
-  //  DASHBOARD: Historial de Devoluciones
-  // ──────────────────────────────────────────────
-
-  /**
-   * Obtiene los préstamos finalizados (estado === 'devuelto')
-   * con join a la tabla `activos` para mostrar el nombre del equipo.
-   * Ordenados por fecha de expiración descendente (más recientes primero).
-   */
-  async getPrestamosFinalizados(): Promise<any[]> {
-    try {
-      const { data, error } = await this.supabase
-        .from('codigos_prestamo')
-        .select('*, activos(*)')
-        .eq('estado', 'devuelto')
-        .order('expira_en', { ascending: false });
-
-      if (error) {
-        console.error('Error al obtener préstamos finalizados:', error);
-        return [];
-      }
-
-      return data ?? [];
-    } catch (err) {
-      console.error('Excepción en getPrestamosFinalizados:', err);
-      return [];
-    }
-  }
-
-  // ──────────────────────────────────────────────
   //  PORTAL: Generación de Pase de Salida
   // ──────────────────────────────────────────────
 
@@ -176,8 +124,9 @@ export class ActivosService {
    * Genera un código de préstamo (pase de salida) con vigencia de 10 minutos.
    * Inserta un registro en la tabla `codigos_prestamo`.
    * @param activoId - UUID del activo para el cual se genera el pase.
+   * @param matricula - Matrícula del estudiante autenticado que solicita el pase.
    */
-  async generarPaseDeSalida(activoId: string): Promise<boolean> {
+  async generarPaseDeSalida(activoId: string, matricula: string): Promise<boolean> {
     try {
       // Calculamos la expiración: 10 minutos a partir de ahora
       const expira = new Date(Date.now() + 10 * 60000).toISOString();
@@ -185,7 +134,7 @@ export class ActivosService {
       const { error } = await this.supabase
         .from('codigos_prestamo')
         .insert({
-          matricula: '202103001',
+          matricula,
           activo_id: activoId,
           codigo_autorizacion: 'PASS-' + Math.floor(Math.random() * 9000 + 1000),
           estado: 'solicitado',
