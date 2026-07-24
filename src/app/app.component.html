@@ -10,7 +10,7 @@
           </ion-list-header>
           <ion-note>Control de Acceso e Inventario</ion-note>
 
-          @for (p of appPages; track p; let i = $index) {
+          @for (p of paginasVisibles; track p; let i = $index) {
           <ion-menu-toggle auto-hide="false">
             <ion-item routerDirection="root" [routerLink]="[p.url]" lines="none" detail="false"
               routerLinkActive="selected">
@@ -19,6 +19,13 @@
             </ion-item>
           </ion-menu-toggle>
           }
+
+          <ion-menu-toggle auto-hide="false">
+            <ion-item button lines="none" detail="false" (click)="cerrarSesion()">
+              <ion-icon aria-hidden="true" slot="start" ios="log-out-outline" md="log-out-sharp"></ion-icon>
+              <ion-label>Cerrar sesión</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
         </ion-list>
       </ion-content>
     </ion-menu>

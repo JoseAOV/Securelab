@@ -1,0 +1,79 @@
+<ion-content [fullscreen]="true" class="auth-content">
+  <div class="auth-wrap">
+    <div class="auth-brand">
+      <div class="auth-icon-badge">
+        <ion-icon name="flask-outline"></ion-icon>
+      </div>
+      <h1 class="auth-title">SecureLab</h1>
+      <p class="auth-subtitle">Control de Acceso e Inventario</p>
+    </div>
+
+    <div class="auth-card">
+      <h2 class="auth-card-title">Crear nueva cuenta</h2>
+      <p class="auth-card-subtitle">Inicie su proceso de registro institucional</p>
+
+      <form (ngSubmit)="crearCuenta()">
+        <label class="auth-label">Matrícula</label>
+        <ion-item class="auth-input" lines="none">
+          <ion-icon name="id-card-outline" slot="start"></ion-icon>
+          <ion-input
+            type="text"
+            placeholder="Ej. 2024030497"
+            [(ngModel)]="matricula"
+            name="matricula"
+            required
+          ></ion-input>
+        </ion-item>
+
+        <label class="auth-label auth-label--spaced">Correo Institucional</label>
+        <ion-item class="auth-input" lines="none">
+          <ion-icon name="mail-outline" slot="start"></ion-icon>
+          <ion-input
+            type="email"
+            placeholder="usuario@universidad.edu"
+            [(ngModel)]="email"
+            name="email"
+            required
+            autocomplete="email"
+          ></ion-input>
+        </ion-item>
+
+        <label class="auth-label auth-label--spaced">Contraseña</label>
+        <ion-item class="auth-input" lines="none">
+          <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+          <ion-input
+            type="password"
+            placeholder="••••••••"
+            [(ngModel)]="password"
+            name="password"
+            required
+            autocomplete="new-password"
+          ></ion-input>
+        </ion-item>
+
+        <div class="auth-info-box">
+          <ion-icon name="information-circle-outline"></ion-icon>
+          <span>Sus credenciales universitarias son obligatorias para garantizar la trazabilidad de equipos y el registro de bitácoras de uso en los laboratorios.</span>
+        </div>
+
+        <ion-button
+          expand="block"
+          type="submit"
+          class="auth-btn-primary"
+          [disabled]="!formularioValido || cargando"
+        >
+          @if (cargando) {
+          <ion-spinner name="dots"></ion-spinner>
+          } @else {
+          Crear Cuenta
+          <ion-icon name="person-add-outline" slot="end"></ion-icon>
+          }
+        </ion-button>
+      </form>
+
+      <p class="auth-footer-link auth-footer-link--inside">
+        ¿Ya tienes una cuenta? <a routerLink="/login">Iniciar Sesión</a>
+      </p>
+    </div>
+  </div>
+</ion-content>

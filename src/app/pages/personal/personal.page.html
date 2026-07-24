@@ -1,0 +1,176 @@
+<!-- HEADER -->
+<ion-header [translucent]="true" class="personal-header">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      <div class="header-brand">
+        <ion-icon name="people" class="brand-icon"></ion-icon>
+        <span class="brand-text">PERSONAL</span>
+      </div>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="personal-content">
+
+  <!-- Pull to Refresh -->
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <!-- Titulo Principal -->
+  <div class="page-title-section">
+    <h1 class="page-title">Padrón de Personas</h1>
+    <p class="page-subtitle">MATRÍCULA · NOMBRE · ROL</p>
+  </div>
+
+  <!-- Barra de busqueda -->
+  <div class="search-wrapper">
+    <ion-searchbar id="personal-search" mode="ios" placeholder="Buscar por nombre, matrícula o rol..."
+      [debounce]="300" (ionInput)="onSearchChange($event)" class="custom-searchbar">
+    </ion-searchbar>
+  </div>
+
+  <!-- Contador -->
+  <div class="section-header">
+    <span class="section-title">PERSONAS REGISTRADAS</span>
+    <span class="section-badge">{{ personasFiltradas.length }}</span>
+  </div>
+
+  <!-- Estado: Cargando -->
+  @if (cargando) {
+  <div class="loading-state">
+    <ion-spinner name="crescent" class="loading-spinner"></ion-spinner>
+    <p class="loading-text">Cargando personal...</p>
+  </div>
+  }
+
+  <!-- Estado: Sin resultados -->
+  @if (!cargando && personasFiltradas.length === 0) {
+  <div class="empty-state">
+    <ion-icon name="people-outline" class="empty-icon"></ion-icon>
+    <p class="empty-text">
+      @if (searchTerm) {
+      No se encontraron personas para "{{ searchTerm }}"
+      } @else {
+      No hay personas registradas aún.
+      }
+    </p>
+  </div>
+  }
+
+  <!-- Lista de Personas -->
+  @if (!cargando && personasFiltradas.length > 0) {
+  <ion-list class="personas-list" lines="none">
+    @for (persona of personasFiltradas; track persona.matricula) {
+    <ion-item class="persona-item" id="persona-{{ persona.matricula }}">
+      <div class="persona-status-icon" [class.persona-status--vinculada]="persona.auth_user_id" slot="start">
+        <ion-icon [name]="persona.auth_user_id ? 'checkmark-circle' : 'time'"></ion-icon>
+      </div>
+
+      <ion-label>
+        <h2 class="persona-nombre">{{ persona.nombre }}</h2>
+        <div class="persona-meta">
+          <span class="persona-matricula">
+            <ion-icon name="id-card-outline"></ion-icon>
+            {{ persona.matricula }}
+          </span>
+          <span class="persona-rol-tag">{{ persona.rol }}</span>
+        </div>
+        <p class="persona-estado" [class.persona-estado--vinculada]="persona.auth_user_id">
+          {{ persona.auth_user_id ? 'Cuenta vinculada' : 'Pendiente de registro' }}
+        </p>
+
+        <div class="persona-acciones">
+          <div class="activa-toggle">
+            <span class="activa-label">Cuenta activa</span>
+            <ion-toggle [checked]="!persona.baneado" (ionChange)="onToggleActiva(persona, $event)"
+              [disabled]="esUnoMismo(persona)" class="custom-toggle" id="activa-{{ persona.matricula }}">
+            </ion-toggle>
+          </div>
+          <div class="botones-fila">
+            <ion-button fill="clear" size="small" (click)="abrirEditar(persona)" id="btn-editar-{{ persona.matricula }}"
+              aria-label="Editar">
+              <ion-icon name="create-outline" slot="icon-only"></ion-icon>
+            </ion-button>
+            <ion-button fill="clear" size="small" color="danger" [disabled]="esUnoMismo(persona)"
+              (click)="confirmarEliminar(persona)" id="btn-eliminar-{{ persona.matricula }}" aria-label="Eliminar">
+              <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+            </ion-button>
+          </div>
+        </div>
+      </ion-label>
+    </ion-item>
+    }
+  </ion-list>
+  }
+
+  <!-- Footer -->
+  <footer class="personal-footer">
+    <span>SecureLab 2025 - Padrón de personas</span>
+  </footer>
+
+  <!-- FAB: Registrar Persona -->
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end" id="fab-agregar-persona">
+    <ion-fab-button (click)="abrirCrear()" class="fab-add">
+      <ion-icon name="add-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+</ion-content>
+
+<!-- MODAL: Registrar / Editar Persona -->
+<ion-modal [isOpen]="isModalOpen" (didDismiss)="isModalOpen = false" class="modal-registrar">
+
+  <ng-template>
+    <ion-header class="modal-header">
+      <ion-toolbar>
+        <ion-title>{{ modoEdicion ? 'Editar Persona' : 'Registrar Persona' }}</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="isModalOpen = false" fill="clear" class="modal-close-btn">
+            <ion-icon name="close-outline" slot="icon-only"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content class="modal-content">
+      <ion-list lines="full" class="form-list">
+
+        <ion-item class="form-item">
+          <ion-input label="Nombre Completo" labelPlacement="floating" placeholder="Ej: Juan Pérez García"
+            [(ngModel)]="personaForm.nombre" required id="input-nombre-persona">
+          </ion-input>
+        </ion-item>
+
+        <ion-item class="form-item">
+          <ion-input label="Matrícula" labelPlacement="floating" placeholder="Ej: 2024030497"
+            [(ngModel)]="personaForm.matricula" [disabled]="modoEdicion" required id="input-matricula-persona">
+          </ion-input>
+        </ion-item>
+
+        <ion-item class="form-item">
+          <ion-select label="Rol" labelPlacement="floating" interface="action-sheet"
+            [(ngModel)]="personaForm.rol" id="select-rol-persona">
+            @for (rol of roles; track rol) {
+            <ion-select-option [value]="rol">{{ rol }}</ion-select-option>
+            }
+          </ion-select>
+        </ion-item>
+
+      </ion-list>
+
+      <div class="form-actions">
+        <ion-button expand="block" (click)="guardarPersona()"
+          [disabled]="!personaForm.nombre.trim() || !personaForm.matricula.trim()" class="btn-guardar"
+          id="btn-guardar-persona">
+          <ion-icon name="save" slot="start"></ion-icon>
+          {{ modoEdicion ? 'Guardar Cambios' : 'Registrar Persona' }}
+        </ion-button>
+      </div>
+    </ion-content>
+  </ng-template>
+
+</ion-modal>

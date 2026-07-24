@@ -1,19 +1,19 @@
 // ═══════════════════════════════════════════════════
-// SecureLab Dashboard – Premium Dark Cybersecurity UI
-// Matching reference screenshot exactly
+// SecureLab Dashboard – feed en vivo (Fase B)
+// Misma paleta navy/azul que Login/Register (auth pages)
 // ═══════════════════════════════════════════════════
 
-// ── Variables locales ──
-$bg-deep: #070b14;
-$bg-card: #0c1220;
-$bg-card-alt: #111827;
-$border-subtle: rgba(255, 255, 255, 0.06);
-$cyan: #00d4ff;
+$bg-deep: #0e1428;
+$bg-card: #1a2242;
+$border-subtle: rgba(140, 160, 220, 0.16);
+$blue: #5b8dfd;
+$blue-dark: #3661e0;
+$blue-light: #9db8f5;
 $green: #00e676;
-$red: #ff1744;
-$text-primary: #e6edf3;
-$text-secondary: #7a8a9e;
-$text-muted: #4a5568;
+$red: #ff4d6a;
+$text-primary: #eef1fb;
+$text-secondary: #97a1c4;
+$text-muted: #6b7494;
 $radius: 14px;
 
 // ── Header ──
@@ -34,155 +34,76 @@ $radius: 14px;
 
 .brand-icon {
   font-size: 24px;
-  color: $cyan;
-  filter: drop-shadow(0 0 6px rgba($cyan, 0.5));
+  color: $blue;
+  filter: drop-shadow(0 0 6px rgba($blue, 0.5));
 }
 
 .brand-text {
   font-size: 16px;
   font-weight: 800;
   letter-spacing: 2px;
-  color: $cyan;
+  color: $blue;
 }
 
-.notification-btn {
-  position: relative;
-  background: none;
-  border: none;
-  padding: 8px;
-  cursor: pointer;
-
-  ion-icon {
-    font-size: 22px;
-    color: $text-primary;
-  }
-}
-
-.notif-badge {
-  position: absolute;
-  top: 4px;
-  right: 2px;
-  background: $red;
-  color: #fff;
-  font-size: 9px;
-  font-weight: 700;
-  min-width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  line-height: 1;
-}
-
-// ── Content Background ──
 .dashboard-content {
   --background: #{$bg-deep};
   --padding-start: 16px;
   --padding-end: 16px;
 }
 
-// ── Page Title ──
+// ── Título + badge de conexión ──
 .page-title-section {
   padding: 20px 0 8px;
+}
+
+.title-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
 }
 
 .page-title {
   font-size: 26px;
   font-weight: 800;
-  color: $text-primary;
-  margin: 0 0 4px;
+  color: $blue-light;
+  margin: 0;
+  line-height: 1.15;
   letter-spacing: -0.3px;
 }
 
-.page-subtitle {
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 2px;
-  color: $text-secondary;
-  margin: 0;
-  text-transform: uppercase;
-}
-
-// ═══════ STAT CARDS ═══════
-.stats-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin: 14px 0 24px;
-}
-
-.stat-card {
-  position: relative;
-  border-radius: $radius;
-  padding: 2px; // for the gradient border
-  overflow: hidden;
-}
-
-.stat-card--success {
-  background: linear-gradient(135deg, $green, rgba($green, 0.3), transparent);
-}
-
-.stat-card--primary {
-  background: linear-gradient(135deg, $cyan, rgba($cyan, 0.3), transparent);
-}
-
-.stat-card-inner {
-  background: $bg-card;
-  border-radius: calc(#{$radius} - 2px);
-  padding: 18px 14px;
+.conn-badge {
+  flex-shrink: 0;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  height: 100%;
-}
-
-.stat-left {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.stat-number {
-  font-size: 38px;
-  font-weight: 900;
-  line-height: 1;
-  font-variant-numeric: tabular-nums;
-
-  .stat-card--success & {
-    color: $green;
-  }
-
-  .stat-card--primary & {
-    color: $cyan;
-  }
-}
-
-.stat-label {
-  font-size: 9px;
+  gap: 6px;
+  background: rgba($green, 0.14);
+  border: 1px solid rgba($green, 0.3);
+  color: $green;
+  font-size: 11px;
   font-weight: 700;
-  letter-spacing: 1.5px;
-  color: $text-secondary;
-  margin-top: 4px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  white-space: nowrap;
+
+  &--off {
+    background: rgba($text-muted, 0.15);
+    border-color: rgba($text-muted, 0.3);
+    color: $text-secondary;
+
+    .conn-dot {
+      background: $text-secondary;
+      box-shadow: none;
+    }
+  }
 }
 
-.stat-right {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.stat-icon {
-  font-size: 32px;
-  opacity: 0.5;
-
-  .stat-card--success & {
-    color: $green;
-  }
-
-  .stat-card--primary & {
-    color: $cyan;
-  }
+.conn-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: $green;
+  box-shadow: 0 0 6px rgba($green, 0.7);
 }
 
 // ═══════ SECTION HEADERS ═══════
@@ -201,249 +122,224 @@ $radius: 14px;
   color: $text-secondary;
 }
 
-.section-badge {
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
+.live-tag {
   display: flex;
   align-items: center;
-  justify-content: center;
-  font-size: 11px;
+  gap: 4px;
+  font-size: 10px;
   font-weight: 700;
-  color: #fff;
+  letter-spacing: 1px;
+  color: $blue;
 
-  &--danger {
-    background: $red;
-    box-shadow: 0 0 10px rgba($red, 0.4);
-  }
-
-  &--primary {
-    background: $cyan;
-    color: #000;
-    box-shadow: 0 0 10px rgba($cyan, 0.3);
+  ion-icon {
+    font-size: 12px;
   }
 }
 
-// ═══════ ALERT CARD ═══════
-.alert-card {
+// ═══════ ÚLTIMO ACCESO (hero card) ═══════
+.hero-card {
+  display: flex;
+  gap: 14px;
   background: $bg-card;
   border-radius: $radius;
-  border-left: 3px solid $red;
-  margin-bottom: 16px;
-  overflow: hidden;
+  border: 1px solid $border-subtle;
+  padding: 18px;
+  margin-bottom: 8px;
   box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+
+  &--alerta {
+    border-color: rgba($red, 0.3);
+  }
 }
 
-.alert-card-inner {
-  display: flex;
-  padding: 16px;
-  gap: 14px;
-}
-
-.alert-icon-wrap {
+.hero-icon-wrap {
   flex-shrink: 0;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: rgba($red, 0.15);
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, $blue-dark, $blue);
   display: flex;
   align-items: center;
   justify-content: center;
+
+  ion-icon {
+    font-size: 24px;
+    color: #fff;
+  }
+
+  &--alerta {
+    background: linear-gradient(135deg, #b5223b, $red);
+  }
 }
 
-.alert-icon {
-  font-size: 20px;
-  color: $red;
-}
-
-.alert-body {
+.hero-body {
   flex: 1;
   min-width: 0;
 }
 
-.alert-title {
-  font-size: 15px;
+.hero-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.hero-equipo {
+  font-size: 17px;
   font-weight: 700;
   color: $text-primary;
-  margin: 0 0 3px;
+  margin: 0;
 }
 
-.alert-time {
+.hero-badge {
+  flex-shrink: 0;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  padding: 3px 10px;
+  border-radius: 6px;
+  background: rgba($green, 0.15);
+  color: $green;
+  border: 1px solid rgba($green, 0.3);
+
+  &--alerta {
+    background: rgba($red, 0.15);
+    color: $red;
+    border-color: rgba($red, 0.3);
+  }
+}
+
+.hero-persona {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 13px;
+  color: $text-secondary;
+  margin-top: 4px;
+
+  ion-icon {
+    font-size: 13px;
+  }
+}
+
+.hero-divider {
+  border-top: 1px solid $border-subtle;
+  margin: 12px 0;
+}
+
+.hero-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   font-size: 12px;
   color: $text-muted;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+
+  span {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
 }
 
-.alert-details {
-  margin-top: 12px;
+// ═══════ ACTIVIDAD RECIENTE ═══════
+.activity-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 66px;
+  background: $bg-card;
+  border-radius: $radius;
+  border-left: 3px solid transparent;
+  padding: 0 16px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
 
-  p {
-    font-size: 13px;
-    color: $text-secondary;
-    margin: 0 0 4px;
+  &.evento--alerta {
+    border-left-color: $red;
+    background: linear-gradient(90deg, rgba($red, 0.12), $bg-card 45%);
+  }
+}
 
-    strong {
-      color: $text-primary;
-      font-weight: 600;
+.activity-icon-wrap {
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  ion-icon {
+    font-size: 18px;
+    color: $text-primary;
+  }
+
+  &.evento--alerta {
+    background: rgba($red, 0.18);
+
+    ion-icon {
+      color: $red;
     }
   }
 }
 
-// ── Camera Panel ──
-.camera-panel {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid $border-subtle;
-  border-radius: 10px;
-  padding: 12px 14px;
-  margin-top: 14px;
-}
-
-.camera-panel-header {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  color: $text-muted;
-  margin-bottom: 8px;
-}
-
-.camera-line {
-  font-size: 13px;
-  color: $text-secondary;
-  margin: 0 0 4px;
-
-  strong {
-    color: $text-primary;
-    font-weight: 600;
-  }
-}
-
-.confidence-tag {
-  display: inline-block;
-  background: rgba($green, 0.15);
-  color: $green;
-  font-size: 12px;
-  font-weight: 700;
-  padding: 2px 10px;
-  border-radius: 6px;
-  border: 1px solid rgba($green, 0.25);
-}
-
-.confidence--high {
-  background: rgba($green, 0.15);
-  color: $green;
-  border-color: rgba($green, 0.25);
-}
-
-// ═══════ TRANSIT CARD ═══════
-.transit-card {
-  background: $bg-card;
-  border-radius: $radius;
-  border-left: 3px solid $cyan;
-  margin-bottom: 12px;
-  overflow: hidden;
-  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.25);
-}
-
-.transit-card-inner {
-  display: flex;
-  align-items: flex-start;
-  padding: 16px;
-  gap: 14px;
-}
-
-.transit-icon-wrap {
-  flex-shrink: 0;
-  width: 42px;
-  height: 42px;
-  border-radius: 12px;
-  background: rgba($cyan, 0.1);
-  border: 1px solid rgba($cyan, 0.15);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.transit-icon {
-  font-size: 22px;
-  color: $cyan;
-}
-
-.transit-body {
+.activity-body {
   flex: 1;
   min-width: 0;
 }
 
-.transit-equipo {
-  font-size: 15px;
+.activity-equipo {
+  font-size: 14px;
   font-weight: 700;
   color: $text-primary;
   margin: 0 0 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.transit-tag {
-  font-size: 11px;
-  font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
-  color: $text-muted;
-  letter-spacing: 0.5px;
-  margin: 0 0 8px;
-}
-
-.transit-meta {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.transit-meta-line {
-  display: flex;
-  align-items: center;
-  gap: 6px;
+.activity-desc {
+  display: block;
   font-size: 12px;
   color: $text-secondary;
-
-  ion-icon {
-    font-size: 13px;
-    color: $cyan;
-    flex-shrink: 0;
-  }
-}
-
-// ── Devolver Button ──
-.devolver-btn {
-  flex-shrink: 0;
-  align-self: center;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  background: transparent;
-  border: 1.5px solid $red;
-  color: $red;
-  font-size: 11px;
-  font-weight: 700;
-  padding: 6px 14px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s ease;
   white-space: nowrap;
-
-  ion-icon {
-    font-size: 14px;
-  }
-
-  &:hover {
-    background: rgba($red, 0.1);
-    box-shadow: 0 0 12px rgba($red, 0.2);
-  }
-
-  &:active {
-    transform: scale(0.95);
-  }
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-// ═══════ EMPTY TRANSIT STATE ═══════
+.activity-right {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.alerta-tag {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: rgba($red, 0.18);
+  color: $red;
+  border: 1px solid rgba($red, 0.35);
+}
+
+.activity-time {
+  font-size: 11px;
+  color: $text-muted;
+}
+
+// ═══════ EMPTY STATE ═══════
 .empty-transit {
   background: $bg-card;
   border-radius: $radius;
-  border-left: 3px solid rgba($cyan, 0.3);
+  border-left: 3px solid rgba($blue, 0.3);
   padding: 24px 20px;
   margin-bottom: 12px;
   text-align: center;
@@ -453,135 +349,37 @@ $radius: 14px;
     color: $text-muted;
     margin: 0;
   }
-
-  &--success {
-    border-left-color: rgba($green, 0.3);
-  }
 }
 
-// ═══════ SECTION BADGE SUCCESS ═══════
-.section-badge--success {
-  background: $green;
-  color: #000;
-  box-shadow: 0 0 10px rgba($green, 0.3);
+// ═══════ VER HISTORIAL COMPLETO ═══════
+.ver-historial-wrap {
+  margin: 8px 0 4px;
 }
 
-// ═══════ HISTORIAL CARD ═══════
-.historial-card {
-  background: $bg-card;
-  border-radius: $radius;
-  border-left: 3px solid $green;
-  margin-bottom: 12px;
-  overflow: hidden;
-  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.25);
-}
-
-.historial-card-inner {
-  display: flex;
-  align-items: flex-start;
-  padding: 16px;
-  gap: 14px;
-}
-
-.historial-icon-wrap {
-  flex-shrink: 0;
-  width: 42px;
-  height: 42px;
-  border-radius: 12px;
-  background: rgba($green, 0.1);
-  border: 1px solid rgba($green, 0.15);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.historial-icon {
-  font-size: 22px;
-  color: $green;
-}
-
-.historial-body {
-  flex: 1;
-  min-width: 0;
-}
-
-.historial-equipo {
-  font-size: 15px;
+.ver-historial-btn {
+  --border-color: #{rgba($blue, 0.45)};
+  --color: #{$blue-light};
+  --border-radius: 12px;
   font-weight: 700;
-  color: $text-primary;
-  margin: 0 0 2px;
-}
-
-.historial-meta {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.historial-meta-line {
-  display: flex;
-  align-items: center;
-  gap: 6px;
   font-size: 12px;
-  color: $text-secondary;
+  letter-spacing: 0.5px;
+}
 
-  ion-icon {
-    font-size: 13px;
-    color: $green;
-    flex-shrink: 0;
+// ═══════ FOOTER ═══════
+.dashboard-footer {
+  text-align: center;
+  padding: 24px 16px 32px;
+  border-top: 1px solid $border-subtle;
+  margin-top: 16px;
+
+  span {
+    font-size: 11px;
+    color: $text-muted;
+    letter-spacing: 0.5px;
   }
 }
 
-// ── Ver Evidencia Button ──
-.evidencia-btn {
-  flex-shrink: 0;
-  align-self: center;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  background: rgba($green, 0.1);
-  border: 1.5px solid $green;
-  color: $green;
-  font-size: 11px;
-  font-weight: 700;
-  padding: 6px 14px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  white-space: nowrap;
-
-  ion-icon {
-    font-size: 15px;
-  }
-
-  &:hover {
-    background: rgba($green, 0.18);
-    box-shadow: 0 0 14px rgba($green, 0.25);
-  }
-
-  &:active {
-    transform: scale(0.95);
-  }
-}
-
-// ── Sin Evidencia Badge ──
-.sin-evidencia-badge {
-  flex-shrink: 0;
-  align-self: center;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 10px;
-  font-weight: 600;
-  color: $text-muted;
-  letter-spacing: 0.3px;
-
-  ion-icon {
-    font-size: 14px;
-  }
-}
-
-// ═══════ EVIDENCIA MODAL ═══════
+// ═══════ MODALES ═══════
 ion-modal {
   --background: #{$bg-deep};
 
@@ -598,23 +396,15 @@ ion-modal {
   }
 }
 
-.modal-close-btn {
-  background: none;
-  border: none;
-  color: $cyan;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  padding: 8px 16px;
-  transition: opacity 0.2s;
-
-  &:hover {
-    opacity: 0.7;
-  }
+.evidencia-modal-content,
+.historial-modal-content {
+  --background: #{$bg-deep};
 }
 
-.evidencia-modal-content {
-  --background: #{$bg-deep};
+.historial-modal-content {
+  --padding-top: 16px;
+  --padding-start: 16px;
+  --padding-end: 16px;
 }
 
 .evidencia-img-wrap {
@@ -634,29 +424,10 @@ ion-modal {
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
 }
 
-// ═══════ FOOTER ═══════
-.dashboard-footer {
-  text-align: center;
-  padding: 24px 16px 32px;
-  border-top: 1px solid $border-subtle;
-  margin-top: 16px;
-
-  span {
-    font-size: 11px;
-    color: $text-muted;
-    letter-spacing: 0.5px;
-  }
-}
-
 // ═══════ RESPONSIVE ═══════
 @media (min-width: 768px) {
-  .stats-grid {
-    max-width: 500px;
-  }
-
-  .alert-card,
-  .transit-card,
-  .historial-card {
+  .hero-card,
+  .activity-card {
     max-width: 600px;
   }
 }

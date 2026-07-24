@@ -1,0 +1,68 @@
+<ion-content [fullscreen]="true" class="auth-content">
+  <div class="auth-wrap">
+    <div class="auth-brand">
+      <div class="auth-icon-badge">
+        <ion-icon name="flask-outline"></ion-icon>
+      </div>
+      <h1 class="auth-title">SecureLab</h1>
+      <p class="auth-subtitle">Control de Acceso e Inventario</p>
+    </div>
+
+    <div class="auth-card">
+      <form (ngSubmit)="iniciarSesion()">
+        <label class="auth-label">Correo institucional</label>
+        <ion-item class="auth-input" lines="none">
+          <ion-icon name="mail-outline" slot="start"></ion-icon>
+          <ion-input
+            type="email"
+            placeholder="Ej. estudiante@universidad.edu"
+            [(ngModel)]="email"
+            name="email"
+            required
+            autocomplete="email"
+          ></ion-input>
+        </ion-item>
+
+        <div class="auth-label-row">
+          <label class="auth-label">Contraseña</label>
+          <button type="button" class="auth-link-btn" (click)="olvideContrasena()">¿Olvidó su contraseña?</button>
+        </div>
+        <ion-item class="auth-input" lines="none">
+          <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+          <ion-input
+            type="password"
+            placeholder="••••••••••••"
+            [(ngModel)]="password"
+            name="password"
+            required
+            autocomplete="current-password"
+          ></ion-input>
+        </ion-item>
+
+        <div class="auth-checkbox-row">
+          <ion-checkbox [(ngModel)]="mantenerSesion" name="mantenerSesion" labelPlacement="end">
+            Mantener sesión iniciada
+          </ion-checkbox>
+        </div>
+
+        <ion-button
+          expand="block"
+          type="submit"
+          class="auth-btn-primary"
+          [disabled]="!email || !password || cargando"
+        >
+          @if (cargando) {
+          <ion-spinner name="dots"></ion-spinner>
+          } @else {
+          Ingresar
+          <ion-icon name="arrow-forward-outline" slot="end"></ion-icon>
+          }
+        </ion-button>
+      </form>
+    </div>
+
+    <p class="auth-footer-link">
+      ¿Aún no tienes acceso? <a routerLink="/register">Solicitar Registro</a>
+    </p>
+  </div>
+</ion-content>

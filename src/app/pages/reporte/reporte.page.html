@@ -1,0 +1,214 @@
+<!-- HEADER -->
+<ion-header [translucent]="true" class="reporte-header">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      <div class="header-brand">
+        <ion-icon name="bar-chart" class="brand-icon"></ion-icon>
+        <span class="brand-text">REPORTES</span>
+      </div>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="reporte-content">
+
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <!-- Titulo + acciones -->
+  <div class="page-title-section">
+    <h1 class="page-title">Reportes y Auditoría</h1>
+    <p class="page-subtitle">Monitoreo forense de eventos de acceso y control de equipos.</p>
+
+    <div class="acciones-export">
+      <ion-button fill="outline" class="btn-csv" (click)="descargarCSV()">
+        <ion-icon name="download-outline" slot="start"></ion-icon>
+        Descargar CSV
+      </ion-button>
+      <ion-button class="btn-pdf" (click)="exportarPDF()">
+        <ion-icon name="document-text-outline" slot="start"></ion-icon>
+        Exportar PDF
+      </ion-button>
+    </div>
+  </div>
+
+  <!-- Stat cards (fijas a últimas 24h) -->
+  @if (cargandoStats) {
+  <div class="loading-state">
+    <ion-spinner name="crescent" class="loading-spinner"></ion-spinner>
+  </div>
+  } @else if (stats) {
+  <div class="stat-card">
+    <div class="stat-card-header">
+      <div class="stat-icon-wrap stat-icon-wrap--azul">
+        <ion-icon name="stats-chart-outline"></ion-icon>
+      </div>
+      <span class="stat-label">EVENTOS TOTALES (24H)</span>
+    </div>
+    <div class="stat-number">{{ stats.eventosTotales | number }}</div>
+    @if (tendencia(stats.eventosTotales, stats.eventosTotalesAnterior); as t) {
+    <span class="stat-tendencia {{ t.clase }}">
+      <ion-icon [name]="t.icono"></ion-icon>
+      {{ t.texto }}
+    </span>
+    }
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-card-header">
+      <div class="stat-icon-wrap stat-icon-wrap--rojo">
+        <ion-icon name="shield-outline"></ion-icon>
+      </div>
+      <span class="stat-label">ACCESOS DENEGADOS</span>
+    </div>
+    <div class="stat-number">{{ stats.accesosDenegados | number }}</div>
+    @if (tendencia(stats.accesosDenegados, stats.accesosDenegadosAnterior); as t) {
+    <span class="stat-tendencia {{ t.clase }}">
+      <ion-icon [name]="t.icono"></ion-icon>
+      {{ t.texto }}
+    </span>
+    }
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-card-header">
+      <div class="stat-icon-wrap stat-icon-wrap--verde">
+        <ion-icon name="hardware-chip-outline"></ion-icon>
+      </div>
+      <span class="stat-label">EQUIPOS AUDITADOS</span>
+    </div>
+    <div class="stat-number">{{ stats.equiposAuditados | number }}</div>
+    <span class="stat-tendencia tendencia--alza">
+      <ion-icon name="checkmark-circle-outline"></ion-icon>
+      {{ stats.porcentajeOperativos !== null ? (stats.porcentajeOperativos + '% Operativos') : 'Sin actividad reciente' }}
+    </span>
+  </div>
+  }
+
+  <!-- Filtros -->
+  <div class="filtros-section">
+    <label class="filtro-label">Rango de Fecha</label>
+    <button type="button" class="filtro-fecha-btn" (click)="abrirRangoFecha()">
+      <ion-icon name="calendar-outline"></ion-icon>
+      {{ rangoFechaTexto }}
+    </button>
+
+    <label class="filtro-label filtro-label--spaced">Tipo de Evento</label>
+    <ion-select interface="action-sheet" [(ngModel)]="filtros.tipo" (ionChange)="onTipoChange($event)"
+      class="filtro-select" id="select-tipo-evento">
+      <ion-select-option value="todos">Todos los eventos</ion-select-option>
+      <ion-select-option value="autorizado">Autorizados</ion-select-option>
+      <ion-select-option value="denegado">Denegados</ion-select-option>
+    </ion-select>
+
+    <ion-searchbar mode="ios" placeholder="Buscar por RFID o Usuario..." [debounce]="300"
+      (ionInput)="onBusquedaChange($event)" class="custom-searchbar filtro-label--spaced">
+    </ion-searchbar>
+  </div>
+
+  <!-- Tabla -->
+  <div class="tabla-wrap">
+    @if (cargandoTabla) {
+    <div class="loading-state">
+      <ion-spinner name="crescent" class="loading-spinner"></ion-spinner>
+    </div>
+    } @else {
+    <table class="tabla-reporte">
+      <thead>
+        <tr>
+          <th>Fecha / Hora</th>
+          <th>RFID</th>
+          <th>Usuario</th>
+          <th>Equipo</th>
+          <th>Resultado</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of eventos; track item.evento_id) {
+        <tr>
+          <td class="col-fecha">{{ item.timestamp | date:'d MMM y, h:mm a' }}</td>
+          <td><span class="rfid-chip">{{ item.rfid_tag }}</span></td>
+          <td>
+            <div class="usuario-cell">
+              <span class="usuario-avatar">{{ getIniciales(item.persona_nombre) }}</span>
+              <div>
+                <div class="usuario-nombre">{{ item.persona_nombre || 'Desconocido' }}</div>
+                <div class="usuario-rol">{{ item.persona_rol || 'Sin registro' }}</div>
+              </div>
+            </div>
+          </td>
+          <td>{{ item.equipo }}</td>
+          <td>
+            <span class="resultado-badge" [class.resultado-badge--denegado]="item.alerta_disparada">
+              {{ resultadoTexto(item) }}
+            </span>
+          </td>
+        </tr>
+        } @empty {
+        <tr>
+          <td colspan="5" class="sin-resultados">No hay eventos para estos filtros.</td>
+        </tr>
+        }
+      </tbody>
+    </table>
+    }
+  </div>
+
+  <!-- Paginación -->
+  <div class="paginacion">
+    <span class="paginacion-info">
+      Mostrando {{ eventos.length === 0 ? 0 : (pagina - 1) * porPagina + 1 }}
+      a {{ (pagina - 1) * porPagina + eventos.length }}
+      de {{ totalResultados | number }} resultados
+    </span>
+    <div class="paginacion-botones">
+      <button type="button" class="pag-btn" [disabled]="pagina === 1" (click)="irAPagina(pagina - 1)">
+        <ion-icon name="chevron-back-outline"></ion-icon>
+      </button>
+      @for (p of paginasVisibles; track p) {
+      <button type="button" class="pag-btn" [class.pag-btn--activa]="p === pagina" (click)="irAPagina(p)">
+        {{ p }}
+      </button>
+      }
+      <button type="button" class="pag-btn" [disabled]="pagina === totalPaginas" (click)="irAPagina(pagina + 1)">
+        <ion-icon name="chevron-forward-outline"></ion-icon>
+      </button>
+    </div>
+  </div>
+
+  <footer class="reporte-footer">
+    <span>SecureLab © 2025 · Reportes y Auditoría</span>
+  </footer>
+
+</ion-content>
+
+<!-- MODAL: Rango de fecha -->
+<ion-modal [isOpen]="isDateModalOpen" (didDismiss)="isDateModalOpen = false" class="modal-fecha">
+  <ng-template>
+    <ion-header class="modal-header">
+      <ion-toolbar>
+        <ion-title>Rango de Fecha</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="isDateModalOpen = false" fill="clear">
+            <ion-icon name="close-outline" slot="icon-only"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="modal-content">
+      <p class="fecha-modal-label">Desde</p>
+      <ion-datetime presentation="date" [(ngModel)]="desdeTemp" class="fecha-picker"></ion-datetime>
+
+      <p class="fecha-modal-label">Hasta</p>
+      <ion-datetime presentation="date" [(ngModel)]="hastaTemp" class="fecha-picker"></ion-datetime>
+
+      <ion-button expand="block" class="btn-aplicar-fecha" (click)="aplicarRangoFecha()">
+        Aplicar
+      </ion-button>
+    </ion-content>
+  </ng-template>
+</ion-modal>

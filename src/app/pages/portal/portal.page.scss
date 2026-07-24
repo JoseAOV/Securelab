@@ -391,3 +391,20 @@ $radius: 14px;
   }
 }
 
+// ── Escaneo de QR ──
+#qr-reader {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.scan-hint {
+  text-align: center;
+  color: var(--ion-color-medium);
+  margin-top: 16px;
+}
+
+.rescan-btn {
+  margin-top: 8px;
+}
+
